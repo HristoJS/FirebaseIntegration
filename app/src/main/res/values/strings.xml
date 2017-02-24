@@ -1,0 +1,104 @@
+<resources>
+    <!--General-->
+    <string name="app_name">FirebaseIntegration</string>
+    <string name="facebook_app_id" translatable="false">1909632855935377</string>
+    <string name="banner_ad_unit_id" translatable="false">ca-app-pub-9718154344756530/1687745808</string>
+    <string name="interstitial_ad_unit_id" translatable="false">ca-app-pub-9718154344756530/2885277404</string>
+    <string name="rewarded_interstitial_ad_unit_id" translatable="false">ca-app-pub-9718154344756530/4362010600</string>
+    <string name="permission_desc">Grants read access to the Address Content Provider.</string>
+    <string name="permission_label">Read</string>
+
+    <!--Login-->
+    <string name="prompt_email">Email</string>
+    <string name="prompt_password">Password</string>
+    <string name="action_sign_in">Sign in</string>
+    <string name="forgot_password_button">Forgotten Password</string>
+    <string name="action_guest_sign_in">Continue as Guest</string>
+    <string name="error_invalid_email">This email address is invalid</string>
+    <string name="error_invalid_password">This password is too short</string>
+    <string name="error_incorrect_password">This password is incorrect</string>
+    <string name="error_field_required">This field is required</string>
+    <string name="login_message">Logging in…</string>
+    <string name="login_fail">Error logging in, please try again.</string>
+    <string name="network_unavailable">No internet connection.</string>
+
+    <!--Register-->
+    <string name="prompt_repeat_email">Repeat Email</string>
+    <string name="prompt_repeat_password">Repeat Password</string>
+    <string name="prompt_name">Name</string>
+    <string name="prompt_country">Country</string>
+    <string name="action_register">Register</string>
+    <string name="auth_failed">Failed to authenticate.</string>
+    <string name="action_google" translatable="false">Google</string>
+    <string name="action_facebook">Facebook</string>
+    <string name="action_twitter" translatable="false">Twitter</string>
+
+    <!--ForgotPassword-->
+    <string name="send_email_button">Send Email</string>
+    <string name="prompt_passcode">Passcode</string>
+    <string name="validate_passcode_button">Validate Passcode</string>
+    <string name="add_picture_button">Add Picture</string>
+
+    <!--MainActivity-->
+    <string name="userAvatar">User Avatar</string>
+    <string name="logout">Logout</string>
+    <string name="banner">Banner</string>
+    <string name="chat">Chat</string>
+    <string name="address">Address</string>
+    <string name="welcome_image">Welcome Image</string>
+
+    <!--FriendListActivity-->
+    <string name="default_name">Guest</string>
+    <string name="default_email" translatable="false">guest@mail.com</string>
+    <string name="appwidget_text">EXAMPLE</string>
+    <string name="add_widget">Add widget</string>
+    <string name="offline">Offline</string>
+    <string name="online">online</string>
+
+    <!--ChatActivity-->
+    <string name="message_send">Send</string>
+    <string name="message_hint">Enter a new message</string>
+    <string name="title_friend_list">Friend List</string>
+    <string name="title_chat_detail">Chat Detail</string>
+    <string name="content_avatar">User Avatar</string>
+    <string name="title_activity_settings">Settings</string>
+
+    <!-- Strings related to Settings -->
+    <string name="pref_header_general">Settings</string>
+    <string name="pref_general_title">General</string>
+    <string name="pref_help_title">Help</string>
+    <string name="prefs_web_page">Visit Website</string>
+
+    <string name="pref_title_notifications">Enable notifications</string>
+    <string name="pref_description_notifications">Turning this on will increase the amount of spam and give you almost no benefit.
+    </string>
+
+    <string name="pref_title_display_name">Display name</string>
+    <string name="pref_default_display_name">John Smith</string>
+
+    <string name="pref_title_russian_cursewords">Favourite russian curse</string>
+    <string name="pref_description_russian_cursewords">It\'s not worth playing online games , if no one curses you in russian.</string>
+    <string-array name="pref_russian_cursewords">
+        <item>Cyka</item>
+        <item>Blyat</item>
+        <item>Idi Nahuy</item>
+        <item>Pizdec</item>
+    </string-array>
+    <string-array name="pref_example_list_values">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+    </string-array>
+
+    <string name="pref_help_description">Just google things.</string>
+
+    <!-- Firebase Invites -->
+    <string name="invitation_title">Join the Dark Side</string>
+    <string name="invitation_message">Come with me my son. We shall rule the world.</string>
+    <string name="invitation_deep_link">Vibrate</string>
+    <string name="invitation_cta">Vibrate</string>
+    <string name="user_status">User Status</string>
+
+
+</resources>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- START xml_defaults -->
+<defaultsMap>
+    <entry>
+        <key>test_param</key>
+        <value>Fetching config…</value>
+    </entry>
+    <entry>
+        <key>welcome_message</key>
+        <value>Welcome</value>
+    </entry>
+</defaultsMap>
+    <!-- END xml_defaults -->
