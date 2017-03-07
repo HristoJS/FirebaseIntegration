@@ -27,7 +27,8 @@
             android:name="io.fabric.ApiKey"
             android:value="5d808aa660e3831ecdcc012117efdff70b8977a6" />
 
-        <activity android:name=".main.MainActivity" />
+        <activity android:name=".main.MainActivity"
+            android:theme="@style/AppTheme"/>
 
         <service
             android:name=".services.MyFirebaseInstanceIDService"
@@ -54,27 +55,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".friendlist.FriendListActivity"
-            android:label="@string/title_friend_list"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name=".chat.ChatActivity"
-            android:label="@string/title_chat_detail"
-            android:parentActivityName=".friendlist.FriendListActivity"
-            android:theme="@style/AppTheme.NoActionBar"
-            android:windowSoftInputMode="stateHidden">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.evilcorp.firebaseintegration.friendlist.FriendListActivity" />
-        </activity>
 
         <service
             android:name=".services.GeoService"
             android:enabled="true"
             android:exported="false" />
-
-        <activity android:name=".findaddress.FindAddressActivity" />
 
         <provider
             android:name=".db.AddressContentProvider"
@@ -82,8 +67,6 @@
             android:exported="true"
             android:readPermission="com.evilcorp.firebaseintegration.db.AddressContentProvider.permRead"
             android:writePermission="disabled" />
-
-        <activity android:name=".settings.SettingsActivity" />
 
         <activity android:name="com.theartofdev.edmodo.cropper.CropImageActivity"/>
     </application>

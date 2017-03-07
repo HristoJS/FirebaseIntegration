@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/action_chat"
+        android:title="@string/chat"
+        android:icon="@drawable/ic_chat_black_24px" />
+    <item android:id="@+id/action_address"
+        android:title="@string/address"
+        android:icon="@drawable/ic_location_city_black_24px" />
+    <item android:id="@+id/action_settings"
+        android:title="@string/title_activity_settings"
+        android:icon="@drawable/ic_settings_black_24px" />
+</menu>

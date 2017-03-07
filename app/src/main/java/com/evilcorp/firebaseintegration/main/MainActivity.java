@@ -4,9 +4,12 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.design.widget.BottomNavigationView;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
-import android.view.View;
-import android.widget.Button;
+import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -14,12 +17,12 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.evilcorp.firebaseintegration.R;
 import com.evilcorp.firebaseintegration.base.BaseActivity;
-import com.evilcorp.firebaseintegration.findaddress.FindAddressActivity;
-import com.evilcorp.firebaseintegration.friendlist.FriendListActivity;
+import com.evilcorp.firebaseintegration.findaddress.FindAddressFragment;
+import com.evilcorp.firebaseintegration.friendlist.FriendListFragment;
 import com.evilcorp.firebaseintegration.login.LoginActivity;
 import com.evilcorp.firebaseintegration.model.firebase.AccountType;
 import com.evilcorp.firebaseintegration.model.starwars.Film;
-import com.evilcorp.firebaseintegration.settings.SettingsActivity;
+import com.evilcorp.firebaseintegration.settings.SettingsFragment;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
@@ -28,13 +31,14 @@ import com.google.android.gms.appinvite.AppInviteInvitation;
 
 import java.util.List;
 
-public class MainActivity extends BaseActivity implements View.OnClickListener, MainContract.View {
+public class MainActivity extends BaseActivity implements MainContract.View {
     private static final String TAG = "MainActivity";
     private static final int REQUEST_INVITE = 512;
     public static final String PROFILE_EXTRA = "PROFILE";
     private static final int BILLING_RESPONSE_RESULT_OK = 0;
     private MainContract.Presenter presenter;
     private InterstitialAd mInterstitialAd;
+    private static int currentFragmentId;
 
     //region Activity methods
     @Override
@@ -42,22 +46,10 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         presenter = new MainPresenter(this, new MainInteractor());
-        Button address_button = (Button) findViewById(R.id.address_button);
-        address_button.setOnClickListener(this);
-        Button logout_button = (Button) findViewById(R.id.logout_button);
-        logout_button.setOnClickListener(this);
-        Button settings_button = (Button) findViewById(R.id.settings_button);
-        settings_button.setOnClickListener(this);
-        Button chat_button = (Button) findViewById(R.id.chat_button);
-        chat_button.setOnClickListener(this);
-        Button share_button = (Button) findViewById(R.id.share_button);
-        share_button.setOnClickListener(this);
-        Button invite_button = (Button) findViewById(R.id.invite_button);
-        invite_button.setOnClickListener(this);
-
-        if (presenter.getAccountType() == AccountType.GUEST){
-            chat_button.setEnabled(false);
-        }
+        LoadFragment(new FriendListFragment(),true);
+        currentFragmentId = R.id.action_chat;
+        addBottomNavigation();
+        addUserPanel();
     }
 
     @Override
@@ -67,32 +59,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         presenter.downloadImage();
         presenter.getFilms();
         //initAds();
-    }
-
-    @Override
-    public void onClick(View view) {
-        switch (view.getId()) {
-            case R.id.logout_button:
-                logout();
-                break;
-            case R.id.address_button:
-                startActivity(new Intent(this, FindAddressActivity.class));
-                break;
-            case R.id.settings_button:
-                startActivity(new Intent(this, SettingsActivity.class));
-                break;
-            case R.id.chat_button:
-                loadChat();
-                break;
-            case R.id.share_button:
-                share();
-                break;
-            case R.id.invite_button:
-                inviteFriend();
-                break;
-            default:
-                break;
-        }
     }
 
     @Override
@@ -110,17 +76,49 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
             }
         }
     }
-
     //endregion
 
     //region Private methods
-    private void loadChat(){
-        startActivity(new Intent(this,FriendListActivity.class));
+    private void addBottomNavigation(){
+        BottomNavigationView bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottomNavigationView);
+        if(bottomNavigationView != null) {
+            bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+                @Override
+                public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                    int itemId = item.getItemId();
+                    if(itemId != currentFragmentId){
+                        switch (itemId) {
+                            case R.id.action_chat:
+                                if (presenter.getAccountType() == AccountType.GUEST) {
+                                    showAlert("This feature is only available for registered users.");
+                                    return false;
+                                } else {
+                                    LoadFragment(new FriendListFragment(), true);
+                                }
+                                break;
+                            case R.id.action_address:
+                                LoadFragment(new FindAddressFragment(), true);
+                                break;
+                            case R.id.action_settings:
+                                LoadFragment(new SettingsFragment(), true);
+                                break;
+                            default:
+                                break;
+                        }
+                        currentFragmentId = itemId;
+                    }
+                    return true;
+                }
+            });
+        }
     }
 
-
-    private void share(){
-
+    private void LoadFragment(Fragment fragment, boolean backstackEnabled){
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragment_placeholder, fragment);
+        if(backstackEnabled)
+            transaction.addToBackStack(null);
+        transaction.commit();
     }
 
     private void inviteFriend(){
@@ -157,14 +155,14 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
 
     @Override
     public void setMessage(String message) {
-        TextView welcome_msg = (TextView) findViewById(R.id.welcome_msg);
-        welcome_msg.setText(message);
+        //TextView welcome_msg = (TextView) findViewById(R.id.welcome_msg);
+        //welcome_msg.setText(message);
     }
 
     @Override
     public void setImage(Uri imageUri) {
-        ImageView image = (ImageView) findViewById(R.id.image);
-        Glide.with(this).load(imageUri).into(image);
+        //ImageView image = (ImageView) findViewById(R.id.image);
+        //Glide.with(this).load(imageUri).into(image);
     }
 
     @Override
@@ -199,6 +197,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         AdRequest adRequest = new AdRequest.Builder().build();
         mInterstitialAd.loadAd(adRequest);
     }
+
 
     //endregion
 

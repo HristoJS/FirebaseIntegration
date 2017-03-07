@@ -47,7 +47,7 @@
     <string name="address">Address</string>
     <string name="welcome_image">Welcome Image</string>
 
-    <!--FriendListActivity-->
+    <!--FriendListFragment-->
     <string name="default_name">Guest</string>
     <string name="default_email" translatable="false">guest@mail.com</string>
     <string name="appwidget_text">EXAMPLE</string>

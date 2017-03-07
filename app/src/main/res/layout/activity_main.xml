@@ -6,86 +6,43 @@
     android:id="@+id/activity_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.evilcorp.firebaseintegration.main.MainActivity">
-    <LinearLayout
+    <include
+        layout="@layout/user_panel"
+        android:id="@+id/userPanel"
+        android:layout_marginTop="@dimen/user_panel_margin"
+        android:layout_marginStart="@dimen/user_panel_margin"
+        android:layout_marginBottom="@dimen/user_panel_margin"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/buttonPanel"
-        style="?android:attr/buttonBarStyle">
-        <Button
-            android:id="@+id/chat_button"
-            android:layout_width="@dimen/button_size"
-            android:layout_height="@dimen/button_size"
-            android:background="@drawable/ic_chat_black_24px"
-            android:layout_margin="@dimen/button_margin"
-            style="?android:attr/buttonBarButtonStyle"/>
-        <Button
-            android:id="@+id/address_button"
-            android:layout_width="@dimen/button_size"
-            android:layout_height="@dimen/button_size"
-            android:background="@drawable/ic_location_city_black_24px"
-            android:layout_margin="@dimen/button_margin"
-            style="?android:attr/buttonBarButtonStyle"/>
-        <Button
-            android:id="@+id/settings_button"
-            android:layout_width="@dimen/button_size"
-            android:layout_height="@dimen/button_size"
-            android:background="@drawable/ic_settings_black_24px"
-            android:layout_margin="@dimen/button_margin"
-            style="?android:attr/buttonBarButtonStyle"/>
-        <Button
-            android:id="@+id/invite_button"
-            android:layout_width="@dimen/button_size"
-            android:layout_height="@dimen/button_size"
-            android:background="@drawable/ic_person_add_black_24px"
-            android:layout_margin="@dimen/button_margin"
-            style="?android:attr/buttonBarButtonStyle"/>
-        <Button
-            android:id="@+id/share_button"
-            android:layout_width="@dimen/button_size"
-            android:layout_height="@dimen/button_size"
-            android:background="@drawable/ic_share_black_24px"
-            android:layout_margin="@dimen/button_margin"
-            style="?android:attr/buttonBarButtonStyle"/>
-        <Button
-            android:id="@+id/logout_button"
-            android:layout_width="@dimen/button_size"
-            android:layout_height="@dimen/button_size"
-            android:layout_margin="@dimen/button_margin"
-            android:background="@drawable/ic_logout_black_24px"
-            style="?android:attr/buttonBarButtonStyle"/>
-
-    </LinearLayout>
-    <include layout="@layout/separator"
-        android:id="@id/separator"
+        />
+    <include
+        layout="@layout/separator"
+        android:id="@+id/separator"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:layout_below="@id/buttonPanel" />
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/welcome_msg"
-        android:layout_margin="10dp"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        android:layout_below="@id/separator"/>
-    <ImageView
+        android:layout_below="@id/userPanel" />
+    <android.support.design.widget.BottomNavigationView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@id/welcome_msg"
-        android:contentDescription="@string/welcome_image"
-        android:id="@+id/image"/>
+        android:layout_height="wrap_content"
+        android:id="@+id/bottomNavigationView"
+        android:layout_alignParentBottom="true"
+        app:menu="@menu/bottom_navigation_items">
+    </android.support.design.widget.BottomNavigationView>
     <com.google.android.gms.ads.AdView
         android:id="@+id/adView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:layout_alignParentBottom="true"
+        android:layout_above="@id/bottomNavigationView"
         ads:adSize="BANNER"
         ads:adUnitId="@string/banner_ad_unit_id">
     </com.google.android.gms.ads.AdView>
+    <FrameLayout
+        android:id="@+id/fragment_placeholder"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/userPanel"
+        android:layout_above="@id/bottomNavigationView">
+    </FrameLayout>
 </RelativeLayout>

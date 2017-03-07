@@ -11,6 +11,7 @@ import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
+import android.widget.ListView;
 
 public class AddressContentProvider extends ContentProvider {
     private static String TAG = AddressContentProvider.class.getSimpleName();
@@ -179,4 +180,6 @@ public class AddressContentProvider extends ContentProvider {
         getContext().getContentResolver().notifyChange(uri, null);
         return rowsUpdated;
     }
+
+
 }

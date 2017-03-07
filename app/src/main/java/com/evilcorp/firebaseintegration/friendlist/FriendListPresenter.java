@@ -10,8 +10,6 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
-import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
@@ -55,7 +53,7 @@ class FriendListPresenter implements FriendListContract.Presenter {
         users = new ArrayList<>();
         userListener = new UserListener();
         chatView.setupRecyclerView(users);
-        getDBRef(USERS).addChildEventListener(userListener);
+        getDBRef(USERS).orderByChild("lastOnline").addChildEventListener(userListener);
     }
 
     private void createChat(String targetUserId){

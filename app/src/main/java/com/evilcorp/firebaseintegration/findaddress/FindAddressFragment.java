@@ -12,26 +12,23 @@ import android.database.Cursor;
 import android.location.Address;
 import android.net.Uri;
 import android.os.IBinder;
+import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.DividerItemDecoration;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
-import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.ListView;
+import android.view.ViewGroup;
 import android.widget.ProgressBar;
-import android.widget.SimpleCursorAdapter;
 import android.widget.Toast;
 
 import com.evilcorp.firebaseintegration.R;
 import com.evilcorp.firebaseintegration.adapter.AddressRecyclerAdapter;
-import com.evilcorp.firebaseintegration.base.BaseActivity;
+import com.evilcorp.firebaseintegration.base.BaseFragment;
 import com.evilcorp.firebaseintegration.db.AddressContentProvider;
 import com.evilcorp.firebaseintegration.db.AddressTable;
 import com.evilcorp.firebaseintegration.services.GeoService;
@@ -41,8 +38,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-public class FindAddressActivity extends BaseActivity implements SearchView.OnQueryTextListener, LoaderManager.LoaderCallbacks<Cursor>, View.OnClickListener {
-    private static final String TAG = FindAddressActivity.class.getSimpleName();
+public class FindAddressFragment extends BaseFragment implements SearchView.OnQueryTextListener, LoaderManager.LoaderCallbacks<Cursor>, View.OnClickListener {
+    private static final String TAG = FindAddressFragment.class.getSimpleName();
     GeoService mService;
     boolean mBound = false;
     private AddressRecyclerAdapter mAdapter;
@@ -53,44 +50,43 @@ public class FindAddressActivity extends BaseActivity implements SearchView.OnQu
     private LinearLayoutManager linearLayoutManager;
     private Cursor mCursor;
 
+    @Nullable
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_find_address);
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View rootView = inflater.inflate(R.layout.fragment_find_address, container, false);
+        progressBar = (ProgressBar) rootView.findViewById(R.id.progress_bar);
 
-        progressBar = (ProgressBar) findViewById(R.id.progress_bar);
-
-        mSearchView = (SearchView) findViewById(R.id.addressSearchView);
+        mSearchView = (SearchView) rootView.findViewById(R.id.addressSearchView);
         mSearchView.setOnQueryTextListener(this);
-        FloatingActionButton deleteButton = (FloatingActionButton) findViewById(R.id.deleteButton);
+        FloatingActionButton deleteButton = (FloatingActionButton) rootView.findViewById(R.id.deleteButton);
         deleteButton.setOnClickListener(this);
-        mAddressRecyclerView = (RecyclerView) findViewById(R.id.addressRecyclerView);
-        linearLayoutManager = new LinearLayoutManager(this);
+        mAddressRecyclerView = (RecyclerView) rootView.findViewById(R.id.addressRecyclerView);
+        linearLayoutManager = new LinearLayoutManager(getContext());
         mAddressRecyclerView.setLayoutManager(linearLayoutManager);
-        getLoaderManager().initLoader(0, null, this);
-        mAdapter = new AddressRecyclerAdapter(this, null);
+        getActivity().getLoaderManager().initLoader(0, null, this);
+        mAdapter = new AddressRecyclerAdapter(getContext(), null);
         mAddressRecyclerView.setAdapter(mAdapter);
         //mAdapter = new SimpleCursorAdapter(this,R.layout.address_item,null, AddressTable.COLUMNS,new int[]{R.id.entry_id,R.id.addressLine0,R.id.addressLine1,R.id.countryName,R.id.latLon,R.id.timeStamp},0);
         //mAddressRecyclerView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new RecyclerItemTouchHelper());
         itemTouchHelper.attachToRecyclerView(mAddressRecyclerView);
+        return rootView;
     }
 
-
     @Override
-    protected void onStart() {
+    public void onStart() {
         super.onStart();
         // Bind to LocalService
-        Intent intent = new Intent(this, GeoService.class);
-        bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
+        Intent intent = new Intent(getContext(), GeoService.class);
+        getContext().bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
     }
 
     @Override
-    protected void onStop() {
+    public void onStop() {
         super.onStop();
         // Unbind from the service
         if (mBound) {
-            unbindService(mConnection);
+            getContext().unbindService(mConnection);
             mBound = false;
         }
     }
@@ -115,16 +111,16 @@ public class FindAddressActivity extends BaseActivity implements SearchView.OnQu
                         values.put(AddressTable.LAT_LONG, address.getLatitude() + " : " + address.getLongitude());
                     else values.put(AddressTable.LAT_LONG, "No LatLong");
                     values.put(AddressTable.TIMESTAMP, time);
-                    getContentResolver().insert(AddressContentProvider.ADDRESS_URI, values);
+                    getContext().getContentResolver().insert(AddressContentProvider.ADDRESS_URI, values);
                 }
             }
             @Override
             public void fail(final String reason) {
                 Log.d(TAG,reason);
-                runOnUiThread(new Runnable() {
+                getActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        Toast.makeText(FindAddressActivity.this,reason,Toast.LENGTH_LONG).show();
+                        Toast.makeText(getContext(),reason,Toast.LENGTH_LONG).show();
                         progressBar.setVisibility(View.INVISIBLE);
                     }
                 });
@@ -158,7 +154,7 @@ public class FindAddressActivity extends BaseActivity implements SearchView.OnQu
 
     @Override
     public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
-        return new CursorLoader(this,
+        return new CursorLoader(getContext(),
                 AddressContentProvider.ADDRESS_URI, AddressTable.COLUMNS, null, null, null);
     }
 
@@ -177,8 +173,8 @@ public class FindAddressActivity extends BaseActivity implements SearchView.OnQu
     public void onClick(View view) {
         switch(view.getId()){
             case R.id.deleteButton:
-                    int rows_deleted = getContentResolver().delete(AddressContentProvider.ADDRESS_URI, null, null);
-                    Toast.makeText(this,rows_deleted+" rows deleted.",Toast.LENGTH_LONG).show();
+                    int rows_deleted = getContext().getContentResolver().delete(AddressContentProvider.ADDRESS_URI, null, null);
+                    Toast.makeText(getContext(),rows_deleted+" rows deleted.",Toast.LENGTH_LONG).show();
                 break;
             default:
                 break;
@@ -209,7 +205,7 @@ public class FindAddressActivity extends BaseActivity implements SearchView.OnQu
                 public void run() {
                     Uri new_uri = AddressContentProvider.ADDRESS_URI.buildUpon().appendPath(String.valueOf(db_pos)).build();
                     Log.d(TAG,new_uri.toString());
-                    int rows_deleted = getContentResolver().delete(new_uri,null,null);
+                    int rows_deleted = getContext().getContentResolver().delete(new_uri,null,null);
                     Log.d(TAG,rows_deleted+" rows deleted.");
                 }
             }).run();
