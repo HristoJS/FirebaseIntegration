@@ -8,6 +8,9 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.view.animation.TranslateAnimation;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
@@ -16,8 +19,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.evilcorp.firebaseintegration.ExpandablePanel;
 import com.evilcorp.firebaseintegration.MyApp;
 import com.evilcorp.firebaseintegration.R;
+import com.evilcorp.firebaseintegration.SplitView;
 import com.evilcorp.firebaseintegration.helper.FirebaseConnectionHelper;
 import com.evilcorp.firebaseintegration.helper.RounderCornerImage;
 import com.evilcorp.firebaseintegration.model.firebase.UserAccount;
@@ -106,10 +111,28 @@ public abstract class BaseActivity extends AppCompatActivity {
         mAlertDialog.show();
     }
 
+    private void animate(View view){
+        Animation animation = new TranslateAnimation(0,0,0,-250);
+        animation.setDuration(5000);
+        animation.setFillAfter(true);
+        view.startAnimation(animation);
+    }
+
     protected void addUserPanel() {
         final UserAccount user = MyApp.getCurrentAccount();
-        View userPanel = findViewById(R.id.userPanel);
+        ExpandablePanel userPanel = (ExpandablePanel) findViewById(R.id.expandablePanel);
         if(user != null && userPanel != null) {
+            userPanel.setOnExpandListener(new ExpandablePanel.OnExpandListener() {
+                @Override
+                public void onExpand(View handle, View content) {
+                    showToast("Expand");
+                }
+
+                @Override
+                public void onCollapse(View handle, View content) {
+                    showToast("Collapse");
+                }
+            });
             ImageView userAvatar = (ImageView) findViewById(R.id.userAvatar);
             Glide.with(this)
                     .load(user.getAvatar())

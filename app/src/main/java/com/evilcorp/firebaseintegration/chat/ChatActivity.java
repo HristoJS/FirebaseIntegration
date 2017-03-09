@@ -48,6 +48,7 @@ public class ChatActivity extends BaseActivity implements ChatContract.View, Vie
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_chat);
         Bundle arguments = getIntent().getExtras();
         if (arguments.containsKey(CHAT_ID)&&arguments.containsKey(USER_ID)) {
             String chatId = arguments.getString(CHAT_ID);
@@ -102,15 +103,15 @@ public class ChatActivity extends BaseActivity implements ChatContract.View, Vie
 
     @Override
     public void setupToolbar(String targetUserName) {
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.setTitle(targetUserName);
-        setSupportActionBar(toolbar);
-
-        // Show the Up button in the action bar.
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setDisplayHomeAsUpEnabled(true);
-        }
+//        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+//        toolbar.setTitle(targetUserName);
+//        setSupportActionBar(toolbar);
+//
+//        // Show the Up button in the action bar.
+//        ActionBar actionBar = getSupportActionBar();
+//        if (actionBar != null) {
+//            actionBar.setDisplayHomeAsUpEnabled(true);
+//        }
     }
 
     @Override

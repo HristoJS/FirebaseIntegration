@@ -99,6 +99,7 @@
     <string name="invitation_deep_link">Vibrate</string>
     <string name="invitation_cta">Vibrate</string>
     <string name="user_status">User Status</string>
+    <string name="description_expand">Expand</string>
 
 
 </resources>

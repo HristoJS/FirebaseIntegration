@@ -5,7 +5,9 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.ContentLoadingProgressBar;
 import android.support.v7.app.AlertDialog;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.evilcorp.firebaseintegration.R;
@@ -15,6 +17,7 @@ import com.evilcorp.firebaseintegration.R;
 public abstract class BaseFragment extends Fragment {
     private ProgressDialog mProgressDialog;
     private AlertDialog mAlertDialog;
+    private ProgressBar mProgressBar;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

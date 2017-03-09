@@ -1,0 +1,15 @@
+<resources>
+    <declare-styleable name="ExpandablePanel">
+        <attr name="handle" format="reference" />
+        <attr name="content" format="reference" />
+        <attr name="animationDuration" format="integer"/>
+        <attr name="minHeight" format="dimension" />
+        <attr name="minWidth" format="dimension" />
+    </declare-styleable>
+
+    <declare-styleable name="SplitView">
+        <attr name="handle" />
+        <attr name="primaryContent" format="reference" />
+        <attr name="secondaryContent" format="reference" />
+    </declare-styleable>
+</resources>

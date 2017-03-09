@@ -45,7 +45,6 @@ public class FindAddressFragment extends BaseFragment implements SearchView.OnQu
     private AddressRecyclerAdapter mAdapter;
     private List<Address> mAddressList;
     private SearchView mSearchView;
-    private ProgressBar progressBar;
     private RecyclerView mAddressRecyclerView;
     private LinearLayoutManager linearLayoutManager;
     private Cursor mCursor;
@@ -54,8 +53,6 @@ public class FindAddressFragment extends BaseFragment implements SearchView.OnQu
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_find_address, container, false);
-        progressBar = (ProgressBar) rootView.findViewById(R.id.progress_bar);
-
         mSearchView = (SearchView) rootView.findViewById(R.id.addressSearchView);
         mSearchView.setOnQueryTextListener(this);
         FloatingActionButton deleteButton = (FloatingActionButton) rootView.findViewById(R.id.deleteButton);
@@ -93,7 +90,7 @@ public class FindAddressFragment extends BaseFragment implements SearchView.OnQu
 
     @Override
     public boolean onQueryTextSubmit(String query) {
-        progressBar.setVisibility(View.VISIBLE);
+        showProgress("Looking for data...");
         mSearchView.clearFocus();
         mService.findAddress(query, new GeoService.ResultListener() {
             @Override
@@ -121,7 +118,7 @@ public class FindAddressFragment extends BaseFragment implements SearchView.OnQu
                     @Override
                     public void run() {
                         Toast.makeText(getContext(),reason,Toast.LENGTH_LONG).show();
-                        progressBar.setVisibility(View.INVISIBLE);
+                        dismissProgress();
                     }
                 });
             }
@@ -160,8 +157,10 @@ public class FindAddressFragment extends BaseFragment implements SearchView.OnQu
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-        mAdapter.swapCursor(data);
-        progressBar.setVisibility(View.INVISIBLE);
+        if(mAdapter != null) {
+            mAdapter.swapCursor(data);
+        }
+        dismissProgress();
     }
 
     @Override

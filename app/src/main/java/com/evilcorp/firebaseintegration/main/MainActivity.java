@@ -10,7 +10,10 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
+import android.widget.SlidingDrawer;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -50,6 +53,7 @@ public class MainActivity extends BaseActivity implements MainContract.View {
         currentFragmentId = R.id.action_chat;
         addBottomNavigation();
         addUserPanel();
+
     }
 
     @Override
@@ -176,7 +180,7 @@ public class MainActivity extends BaseActivity implements MainContract.View {
 
     //region Ads
     private void initAds(){
-        AdView mAdView = (AdView) findViewById(R.id.adView);
+        AdView mAdView = new AdView(this);
         AdRequest adRequest = new AdRequest.Builder().build();
         mAdView.loadAd(adRequest);
         mInterstitialAd = new InterstitialAd(this);

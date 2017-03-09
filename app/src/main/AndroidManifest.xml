@@ -56,6 +56,8 @@
             </intent-filter>
         </activity>
 
+        <activity android:name=".chat.ChatActivity" />
+
         <service
             android:name=".services.GeoService"
             android:enabled="true"
