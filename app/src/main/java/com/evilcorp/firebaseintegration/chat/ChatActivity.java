@@ -10,8 +10,12 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.GridView;
+import android.widget.ListView;
+import android.widget.SimpleAdapter;
 
 import com.evilcorp.firebaseintegration.R;
 import com.evilcorp.firebaseintegration.base.BaseActivity;
@@ -19,8 +23,11 @@ import com.evilcorp.firebaseintegration.friendlist.FriendListFragment;
 import com.evilcorp.firebaseintegration.adapter.ChatAdapter;
 import com.evilcorp.firebaseintegration.model.firebase.UserAccount;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
+import io.fabric.sdk.android.services.concurrency.AsyncTask;
 
 /**
  * A fragment representing a single Chat detail screen.
@@ -70,9 +77,16 @@ public class ChatActivity extends BaseActivity implements ChatContract.View, Vie
     }
 
     @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
+    }
+
+    @Override
     public void onDestroy() {
         super.onDestroy();
         presenter.destroy();
+        presenter = null;
     }
 
     @Override

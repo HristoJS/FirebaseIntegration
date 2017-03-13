@@ -2,10 +2,6 @@ package com.evilcorp.firebaseintegration.main;
 
 import android.net.Uri;
 
-import com.evilcorp.firebaseintegration.model.starwars.Film;
-
-import java.util.List;
-
 public interface MainContract {
 
     interface View {
@@ -17,8 +13,6 @@ public interface MainContract {
         void setMessage(String message);
 
         void setImage(Uri imageUri);
-
-        void showFilms(List<Film> films);
 
     }
 
@@ -32,8 +26,6 @@ public interface MainContract {
         void getWelcomeMessage();
 
         void downloadImage();
-
-        void getFilms();
 
     }
 }

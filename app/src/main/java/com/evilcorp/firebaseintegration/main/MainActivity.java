@@ -10,21 +10,14 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.MenuItem;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
-import android.widget.ImageView;
-import android.widget.SlidingDrawer;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
 import com.evilcorp.firebaseintegration.R;
 import com.evilcorp.firebaseintegration.base.BaseActivity;
 import com.evilcorp.firebaseintegration.findaddress.FindAddressFragment;
 import com.evilcorp.firebaseintegration.friendlist.FriendListFragment;
 import com.evilcorp.firebaseintegration.login.LoginActivity;
 import com.evilcorp.firebaseintegration.model.firebase.AccountType;
-import com.evilcorp.firebaseintegration.model.starwars.Film;
 import com.evilcorp.firebaseintegration.settings.SettingsFragment;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
@@ -61,7 +54,6 @@ public class MainActivity extends BaseActivity implements MainContract.View {
         super.onStart();
         presenter.getWelcomeMessage();
         presenter.downloadImage();
-        presenter.getFilms();
         //initAds();
     }
 
@@ -169,12 +161,6 @@ public class MainActivity extends BaseActivity implements MainContract.View {
         //Glide.with(this).load(imageUri).into(image);
     }
 
-    @Override
-    public void showFilms(List<Film> films) {
-        if(films!=null&&films.size()>0) {
-            Log.d(TAG, films.get(0).toString());
-        }
-    }
 
     //endregion
 

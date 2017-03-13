@@ -1,4 +1,4 @@
-package com.evilcorp.firebaseintegration;
+package com.evilcorp.firebaseintegration.view;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.os.SystemClock;
@@ -10,6 +10,8 @@ import android.widget.TextView;
 import android.view.ViewGroup;
 import android.view.View.OnTouchListener;
 import android.widget.LinearLayout;
+
+import com.evilcorp.firebaseintegration.R;
 
 public class SplitView extends LinearLayout implements OnTouchListener {
 

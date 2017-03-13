@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TextInputEditText;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -24,6 +25,7 @@ import com.evilcorp.firebaseintegration.register.RegisterFragment;
 import com.evilcorp.firebaseintegration.main.MainActivity;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookSdk;
+import com.facebook.login.LoginManager;
 import com.facebook.login.widget.LoginButton;
 import com.google.android.gms.common.SignInButton;
 import com.twitter.sdk.android.core.identity.TwitterLoginButton;
@@ -81,6 +83,7 @@ public class LoginFragment extends BaseFragment implements LoginContract.View, V
         mGuestSignInButton.setOnClickListener(this);
         mForgotPassword.setOnClickListener(this);
         mRegisterButton.setOnClickListener(this);
+
 
         //facebookButton.setReadPermissions("email");
         mFbCallbackManager = CallbackManager.Factory.create();

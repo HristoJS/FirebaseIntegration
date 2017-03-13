@@ -1,6 +1,7 @@
 package com.evilcorp.firebaseintegration;
 
 import android.app.Application;
+import android.os.StrictMode;
 import android.preference.PreferenceManager;
 
 import com.evilcorp.firebaseintegration.helper.FirebaseConnectionHelper;
@@ -35,9 +36,21 @@ public class MyApp extends Application {
 
     @Override
     public void onCreate() {
+        StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder()
+                .detectDiskReads()
+                .detectDiskWrites()
+                .detectAll()   // or .detectAll() for all detectable problems
+                .penaltyLog()
+                .build());
+        StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder()
+                .detectLeakedSqlLiteObjects()
+                .detectLeakedClosableObjects()
+                .penaltyLog()
+                .penaltyDeath()
+                .build());
         super.onCreate();
-        TwitterAuthConfig authConfig = new TwitterAuthConfig(BuildConfig.TWITTER_KEY, BuildConfig.TWITTER_SECRET);
-        Fabric.with(this, new Twitter(authConfig));
+        initFabric();
+
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.default_web_client_id))
                 .requestEmail()
@@ -46,12 +59,32 @@ public class MyApp extends Application {
                 //.enableAutoManage(getBaseContext() /* FragmentActivity */, this /* OnConnectionFailedListener */)
                 .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
                 .build();
-        MobileAds.initialize(getApplicationContext(),BuildConfig.ADS_PUBLIC_KEY);
         FirebaseApp.initializeApp(getApplicationContext());
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
-        PreferenceManager.setDefaultValues(getApplicationContext(), R.xml.preferences, false);
+        setDefaultSettings();
         Time.init();
     }
+
+    private void initFabric(){
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                TwitterAuthConfig authConfig = new TwitterAuthConfig(BuildConfig.TWITTER_KEY, BuildConfig.TWITTER_SECRET);
+                Fabric.with(MyApp.this, new Twitter(authConfig));
+                MobileAds.initialize(getApplicationContext(),BuildConfig.ADS_PUBLIC_KEY);
+            }
+        }).start();
+    }
+
+    private void setDefaultSettings(){
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                PreferenceManager.setDefaultValues(getApplicationContext(), R.xml.preferences, false);
+            }
+        }).start();
+    }
+
 
     public static FirebaseAnalytics getFirebaseAnalytics() {
         return mFirebaseAnalytics;

@@ -5,10 +5,6 @@ import android.net.Uri;
 import com.evilcorp.firebaseintegration.MyApp;
 import com.evilcorp.firebaseintegration.helper.FirebaseCallback;
 import com.evilcorp.firebaseintegration.model.firebase.AccountType;
-import com.evilcorp.firebaseintegration.model.firebase.UserStatus;
-import com.evilcorp.firebaseintegration.model.starwars.Film;
-
-import java.util.List;
 
 
 public class MainPresenter implements MainContract.Presenter {
@@ -78,19 +74,5 @@ public class MainPresenter implements MainContract.Presenter {
         return interactor.getAccountType();
     }
 
-    @Override
-    public void getFilms() {
-        interactor.getFilms(new FirebaseCallback<List<Film>>() {
-            @Override
-            public void success(List<Film> result) {
-                mainView.showFilms(result);
-            }
-
-            @Override
-            public void fail(Exception exception) {
-                exception.printStackTrace();
-            }
-        });
-    }
 
 }

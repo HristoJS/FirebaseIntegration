@@ -1,8 +1,7 @@
-package com.evilcorp.firebaseintegration;
+package com.evilcorp.firebaseintegration.view;
 
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.support.design.widget.CollapsingToolbarLayout;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -13,6 +12,8 @@ import android.view.animation.Animation.AnimationListener;
 import android.view.animation.LinearInterpolator;
 import android.view.animation.Transformation;
 import android.widget.LinearLayout;
+
+import com.evilcorp.firebaseintegration.R;
 
 public class ExpandablePanel extends LinearLayout {
     private static final String TAG = ExpandablePanel.class.getSimpleName();

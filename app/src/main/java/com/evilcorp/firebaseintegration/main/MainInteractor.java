@@ -11,11 +11,6 @@ import com.evilcorp.firebaseintegration.helper.FirebaseCallback;
 import com.evilcorp.firebaseintegration.model.firebase.AccountType;
 import com.evilcorp.firebaseintegration.model.firebase.UserAccount;
 import com.evilcorp.firebaseintegration.model.firebase.UserStatus;
-import com.evilcorp.firebaseintegration.model.starwars.Film;
-import com.evilcorp.firebaseintegration.repository.DataRepository;
-import com.evilcorp.firebaseintegration.repository.DataSource;
-import com.evilcorp.firebaseintegration.repository.local.LocalDataSource;
-import com.evilcorp.firebaseintegration.repository.remote.RemoteDataSource;
 import com.facebook.login.LoginManager;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -27,8 +22,6 @@ import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-
-import java.util.List;
 
 /**
  * Created by hristo.stoyanov on 15-Feb-17.
@@ -43,7 +36,6 @@ public class MainInteractor {
     private FirebaseUser mUser;
     private FirebaseRemoteConfig mFirebaseRemoteConfig;
     private FirebaseStorage mFirebaseStorage;
-    private DataRepository mDataRepository;
     private DatabaseReference mUserDbRef;
 
     MainInteractor(){
@@ -64,7 +56,6 @@ public class MainInteractor {
         mUserDbRef = FirebaseDatabase.getInstance().getReference().child(USERS);
 
 
-        this.mDataRepository = DataRepository.getInstance(LocalDataSource.getInstance(), RemoteDataSource.getInstance());
     }
 
     void logout(){
@@ -115,19 +106,7 @@ public class MainInteractor {
         });
     }
 
-    void getFilms(final FirebaseCallback<List<Film>> callback) {
-        mDataRepository.getAllFilms(new DataSource.ResultCallback<List<Film>>() {
-            @Override
-            public void success(List<Film> response) {
-                callback.success(response);
-            }
 
-            @Override
-            public void failure(Throwable throwable) {
-                callback.fail(new Exception(throwable));
-            }
-        });
-    }
 
     void getWelcomeMessage(final FirebaseCallback<String> callback){
         // cacheExpirationSeconds is set to cacheExpiration here, indicating that any previously

@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.evilcorp.firebaseintegration.main.MainActivity">
-    <com.evilcorp.firebaseintegration.ExpandablePanel
+    <com.evilcorp.firebaseintegration.view.ExpandablePanel
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/expandablePanel"
@@ -37,7 +37,7 @@
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_below="@id/userPanel" />
-    </com.evilcorp.firebaseintegration.ExpandablePanel>
+    </com.evilcorp.firebaseintegration.view.ExpandablePanel>
 
     <android.support.design.widget.BottomNavigationView
         android:layout_width="match_parent"

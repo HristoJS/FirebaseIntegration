@@ -66,8 +66,7 @@
         <provider
             android:name=".db.AddressContentProvider"
             android:authorities="com.evilcorp.firebaseintegration.db.AddressContentProvider"
-            android:exported="true"
-            android:readPermission="com.evilcorp.firebaseintegration.db.AddressContentProvider.permRead"
+            android:exported="false"
             android:writePermission="disabled" />
 
         <activity android:name="com.theartofdev.edmodo.cropper.CropImageActivity"/>

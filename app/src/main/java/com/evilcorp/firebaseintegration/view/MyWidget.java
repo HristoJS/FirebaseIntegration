@@ -1,9 +1,11 @@
-package com.evilcorp.firebaseintegration;
+package com.evilcorp.firebaseintegration.view;
 
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.Context;
 import android.widget.RemoteViews;
+
+import com.evilcorp.firebaseintegration.R;
 
 /**
  * Implementation of App Widget functionality.
