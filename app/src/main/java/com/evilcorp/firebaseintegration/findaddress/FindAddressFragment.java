@@ -45,8 +45,6 @@ public class FindAddressFragment extends BaseFragment implements SearchView.OnQu
     private AddressRecyclerAdapter mAdapter;
     private List<Address> mAddressList;
     private SearchView mSearchView;
-    private RecyclerView mAddressRecyclerView;
-    private LinearLayoutManager linearLayoutManager;
     private Cursor mCursor;
 
     @Nullable
@@ -57,16 +55,16 @@ public class FindAddressFragment extends BaseFragment implements SearchView.OnQu
         mSearchView.setOnQueryTextListener(this);
         FloatingActionButton deleteButton = (FloatingActionButton) rootView.findViewById(R.id.deleteButton);
         deleteButton.setOnClickListener(this);
-        mAddressRecyclerView = (RecyclerView) rootView.findViewById(R.id.addressRecyclerView);
-        linearLayoutManager = new LinearLayoutManager(getContext());
-        mAddressRecyclerView.setLayoutManager(linearLayoutManager);
+        RecyclerView addressRecyclerView = (RecyclerView) rootView.findViewById(R.id.addressRecyclerView);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
+        addressRecyclerView.setLayoutManager(linearLayoutManager);
         getActivity().getLoaderManager().initLoader(0, null, this);
         mAdapter = new AddressRecyclerAdapter(getContext(), null);
-        mAddressRecyclerView.setAdapter(mAdapter);
+        addressRecyclerView.setAdapter(mAdapter);
         //mAdapter = new SimpleCursorAdapter(this,R.layout.address_item,null, AddressTable.COLUMNS,new int[]{R.id.entry_id,R.id.addressLine0,R.id.addressLine1,R.id.countryName,R.id.latLon,R.id.timeStamp},0);
         //mAddressRecyclerView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new RecyclerItemTouchHelper());
-        itemTouchHelper.attachToRecyclerView(mAddressRecyclerView);
+        itemTouchHelper.attachToRecyclerView(addressRecyclerView);
         return rootView;
     }
 

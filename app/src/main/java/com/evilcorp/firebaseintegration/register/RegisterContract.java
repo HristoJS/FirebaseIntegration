@@ -5,6 +5,7 @@ import android.net.Uri;
 
 public interface RegisterContract {
     interface View {
+
         void registerSuccess();
 
         void registerFail(String reason);

@@ -22,7 +22,7 @@ import java.util.List;
 
 public class FriendListFragment extends BaseFragment implements FriendListContract.View, FriendListAdapter.FriendClickListener {
 
-    private FriendListContract.Presenter presenter;
+    private FriendListContract.Presenter mPresenter;
     private FriendListAdapter mAdapter;
 
     @Override
@@ -42,13 +42,13 @@ public class FriendListFragment extends BaseFragment implements FriendListContra
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        presenter = new FriendListPresenter(this);
+        mPresenter = new FriendListPresenter(this);
     }
 
     @Override
     public void setupRecyclerView(List<UserAccount> users) {
         View rootView = getView();
-        if(rootView != null) {
+        if (rootView != null) {
             RecyclerView recyclerView = (RecyclerView) rootView.findViewById(R.id.user_list);
             assert recyclerView != null;
             mAdapter = new FriendListAdapter(getContext(), users, this);
@@ -77,7 +77,7 @@ public class FriendListFragment extends BaseFragment implements FriendListContra
     }
 
     @Override
-    public void loadChat(String chatId, String userId){
+    public void loadChat(String chatId, String userId) {
         Intent intent = new Intent(getContext(), ChatActivity.class);
         intent.putExtra(ChatActivity.CHAT_ID, chatId);
         intent.putExtra(ChatActivity.USER_ID, userId);
@@ -86,13 +86,13 @@ public class FriendListFragment extends BaseFragment implements FriendListContra
 
     @Override
     public void onFriendClick(String targetUserId) {
-        presenter.initChat(targetUserId);
+        mPresenter.initChat(targetUserId);
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        presenter.destroy();
-        presenter = null;
+        mPresenter.destroy();
+        mPresenter = null;
     }
 }

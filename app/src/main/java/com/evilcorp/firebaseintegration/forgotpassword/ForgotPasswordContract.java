@@ -2,7 +2,7 @@ package com.evilcorp.firebaseintegration.forgotpassword;
 
 
 interface ForgotPasswordContract {
-    interface View{
+    interface View {
 
         void sendEmailSuccess();
 

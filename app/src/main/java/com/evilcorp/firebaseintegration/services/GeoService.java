@@ -16,6 +16,7 @@ public class GeoService extends Service {
     private final IBinder mBinder = new LocalBinder();
     private Geocoder mGeocoder;
     private static final int MAX_RESULTS = 50;
+
     public GeoService() {
     }
 
@@ -29,7 +30,7 @@ public class GeoService extends Service {
         return mBinder;
     }
 
-    public void findAddress(final String query,final ResultListener listener) {
+    public void findAddress(final String query, final ResultListener listener) {
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -39,17 +40,16 @@ public class GeoService extends Service {
 //                    e.printStackTrace();
 //                }
                 List<Address> addresses = null;
-                if(Geocoder.isPresent()) {
+                if (Geocoder.isPresent()) {
                     try {
                         addresses = mGeocoder.getFromLocationName(query, MAX_RESULTS);
                     } catch (IOException e) {
                         e.printStackTrace();
                         listener.fail("IOException");
                     }
-                }
-                else listener.fail("No Geocoder");
+                } else listener.fail("No Geocoder");
 
-                if(addresses!=null && addresses.size()>0)
+                if (addresses != null && addresses.size() > 0)
                     listener.success(addresses);
                 else listener.fail("No Addresses");
             }
@@ -63,8 +63,9 @@ public class GeoService extends Service {
         }
     }
 
-    public interface ResultListener{
+    public interface ResultListener {
         void success(List<Address> addresses);
+
         void fail(String reason);
     }
 }

@@ -43,8 +43,8 @@ public class ExpandablePanel extends LinearLayout {
     private ScaleGestureDetector mScaleDetector;
     private float mScaleFactor = 1.f;
 
-    private float oldX;
-    private float oldY;
+    private float mOldX;
+    private float mOldY;
 
     public ExpandablePanel(Context context) {
         this(context, null);
@@ -91,12 +91,12 @@ public class ExpandablePanel extends LinearLayout {
             switch (eventAction) {
                 case MotionEvent.ACTION_DOWN:
                     Log.d(TAG, "Action Down");
-                    oldX = eventX;
-                    oldY = eventY;
+                    mOldX = eventX;
+                    mOldY = eventY;
                     break;
                 case MotionEvent.ACTION_MOVE:
-                    float dX = eventX - oldX;
-                    float dY = eventY - oldY;
+                    float dX = eventX - mOldX;
+                    float dY = eventY - mOldY;
                     Log.d(TAG, "Action Move "+dX+" , "+dY);
                     if (mContentHeight <= mOriginalHeight && dY > 0f){
                         applyTransformation(0,dY,0.1f);

@@ -3,12 +3,10 @@ package com.evilcorp.firebaseintegration.helper;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
-import com.evilcorp.firebaseintegration.MyApp;
 import com.evilcorp.firebaseintegration.model.firebase.UserAccount;
 import com.evilcorp.firebaseintegration.model.firebase.UserStatus;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.FirebaseApp;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -17,7 +15,6 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.TimeZone;
 
 /**
  * Created by hristo.stoyanov on 23-Feb-17.
@@ -25,12 +22,12 @@ import java.util.TimeZone;
 
 public class FirebaseConnectionHelper {
     private static final String TAG = FirebaseConnectionHelper.class.getSimpleName();
-    private static final DatabaseReference usersRef = FirebaseDatabase.getInstance().getReference("/users");
-    public static boolean isConnected;
+    private static final DatabaseReference USERS_REF = FirebaseDatabase.getInstance().getReference("/users");
+    public static boolean IS_CONNECTED;
 
     public static void init(UserAccount account){
         //final DatabaseReference lastOnlineRef = FirebaseDatabase.getInstance().getReference("/users/"+account.getId()+"/lastOnline");
-        final DatabaseReference accountRef = usersRef.child(account.getId());
+        final DatabaseReference accountRef = USERS_REF.child(account.getId());
 
         DatabaseReference connectedRef = FirebaseDatabase.getInstance().getReference(".info/connected");
         connectedRef.addValueEventListener(new ValueEventListener() {
@@ -38,7 +35,7 @@ public class FirebaseConnectionHelper {
             public void onDataChange(DataSnapshot snapshot) {
                 boolean connected = snapshot.getValue(Boolean.class);
                 if (connected) {
-                    isConnected = true;
+                    IS_CONNECTED = true;
                     //lastOnlineRef.onDisconnect().setValue(Time.getTime());
                     Map<String,Object> new_status = new HashMap<>();
                     new_status.put("lastOnline",Time.getTime());
@@ -56,7 +53,7 @@ public class FirebaseConnectionHelper {
                     });
                     Log.d(TAG,"Connected.");
                 } else {
-                    isConnected = false;
+                    IS_CONNECTED = false;
                     Log.d(TAG,"Discnnected.");
                 }
             }
@@ -69,7 +66,7 @@ public class FirebaseConnectionHelper {
     }
 
     public static void changeStatus(UserAccount account, final int userStatus){
-        DatabaseReference accountRef = usersRef.child(account.getId());
+        DatabaseReference accountRef = USERS_REF.child(account.getId());
         Map<String,Object> new_status = new HashMap<>();
         new_status.put("userStatus", userStatus);
         if(userStatus == UserStatus.OFFLINE || userStatus == UserStatus.INVISIBLE){

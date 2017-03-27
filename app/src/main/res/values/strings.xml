@@ -1,6 +1,6 @@
 <resources>
     <!--General-->
-    <string name="app_name">FirebaseIntegration</string>
+    <string name="app_name">Firebase Chatterino</string>
     <string name="facebook_app_id" translatable="false">1909632855935377</string>
     <string name="banner_ad_unit_id" translatable="false">ca-app-pub-9718154344756530/1687745808</string>
     <string name="interstitial_ad_unit_id" translatable="false">ca-app-pub-9718154344756530/2885277404</string>
@@ -100,6 +100,7 @@
     <string name="invitation_cta">Vibrate</string>
     <string name="user_status">User Status</string>
     <string name="description_expand">Expand</string>
+    <string name="or">or</string>
 
 
 </resources>

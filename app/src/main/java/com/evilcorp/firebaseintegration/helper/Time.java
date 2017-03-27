@@ -4,10 +4,8 @@ import com.instacart.library.truetime.TrueTime;
 
 import java.io.IOException;
 import java.text.DateFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -19,14 +17,16 @@ import java.util.concurrent.TimeUnit;
  */
 
 public class Time {
-    private static final List<Long> times = Arrays.asList(
+
+    private static final List<Long> TIMES = Arrays.asList(
             TimeUnit.DAYS.toMillis(365),
             TimeUnit.DAYS.toMillis(30),
             TimeUnit.DAYS.toMillis(1),
             TimeUnit.HOURS.toMillis(1),
             TimeUnit.MINUTES.toMillis(1),
             TimeUnit.SECONDS.toMillis(1) );
-    private static final List<String> timesString = Arrays.asList("year","month","day","hour","minute","second");
+
+    private static final List<String> TIMES_STRING = Arrays.asList("year","month","day","hour","minute","second");
 
 
     public static void init(){
@@ -66,13 +66,13 @@ public class Time {
 
     public static String timeAgo(long duration) {
         StringBuilder sb = new StringBuilder();
-        for(int i=0;i< times.size(); i++) {
-            Long current = times.get(i);
+        for(int i = 0; i< TIMES.size(); i++) {
+            Long current = TIMES.get(i);
             long temp = milisSinceOnline(duration) / current;
             if (temp > 0) {
                 sb.append(temp)
                         .append(" ")
-                        .append(timesString.get(i))
+                        .append(TIMES_STRING.get(i))
                         .append(temp > 1 ? "s" : "")
                         .append(" ago");
                 break;

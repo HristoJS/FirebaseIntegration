@@ -119,17 +119,17 @@ public class FirebaseArray implements ChildEventListener, ValueEventListener {
         mListener = listener;
     }
 
-    protected void notifyChangedListeners(OnChangedListener.EventType type, int index) {
+    private void notifyChangedListeners(OnChangedListener.EventType type, int index) {
         notifyChangedListeners(type, index, -1);
     }
 
-    protected void notifyChangedListeners(OnChangedListener.EventType type, int index, int oldIndex) {
+    private void notifyChangedListeners(OnChangedListener.EventType type, int index, int oldIndex) {
         if (mListener != null) {
             mListener.onChildChanged(type, index, oldIndex);
         }
     }
 
-    protected void notifyCancelledListeners(DatabaseError databaseError) {
+    private void notifyCancelledListeners(DatabaseError databaseError) {
         if (mListener != null) {
             mListener.onCancelled(databaseError);
         }

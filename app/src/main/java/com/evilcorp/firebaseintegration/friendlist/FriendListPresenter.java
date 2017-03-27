@@ -19,17 +19,17 @@ import java.util.List;
 
 class FriendListPresenter implements FriendListContract.Presenter {
     private static final String TAG = FriendListPresenter.class.getSimpleName();
-
-    private FriendListContract.View chatView;
     private static final String CHATS = "chats";
-    private static final String USERS = "users";
-    private List<UserAccount> users;
-    private boolean chat_found = false;
-    private UserListener userListener;
-    private ChatListener chatListener;
+    private static final String USERS = "mUsers";
 
-    FriendListPresenter(FriendListContract.View view){
-        this.chatView = view;
+    private FriendListContract.View mChatView;
+    private List<UserAccount> mUsers;
+    private boolean mChatFound = false;
+    private UserListener mUserListener;
+    private ChatListener mChatListener;
+
+    FriendListPresenter(FriendListContract.View view) {
+        this.mChatView = view;
         getUserList();
     }
 
@@ -39,101 +39,103 @@ class FriendListPresenter implements FriendListContract.Presenter {
 
     @Override
     public void destroy() {
-        if(userListener!=null) {
-            getDBRef(USERS).removeEventListener(userListener);
-            userListener = null;
+        if (mUserListener != null) {
+            getDBRef(USERS).removeEventListener(mUserListener);
+            mUserListener = null;
         }
-        if(chatListener!=null) {
-            getDBRef(CHATS).removeEventListener(chatListener);
-            chatListener = null;
+        if (mChatListener != null) {
+            getDBRef(CHATS).removeEventListener(mChatListener);
+            mChatListener = null;
         }
     }
 
     private void getUserList() {
-        users = new ArrayList<>();
-        userListener = new UserListener();
-        chatView.setupRecyclerView(users);
-        getDBRef(USERS).orderByChild("lastOnline").addChildEventListener(userListener);
+        mUsers = new ArrayList<>();
+        mUserListener = new UserListener();
+        mChatView.setupRecyclerView(mUsers);
+        getDBRef(USERS).orderByChild("lastOnline").addChildEventListener(mUserListener);
     }
 
-    private void createChat(String targetUserId){
+    private void createChat(String targetUserId) {
         DatabaseReference new_chat = getDBRef(CHATS).push();
         List<String> ids = new ArrayList<>();
         ids.add(targetUserId);
         ids.add(MyApp.getCurrentAccount().getId());
-        Chat chat = new Chat(new_chat.getKey(),"","New Chat",ids);
+        Chat chat = new Chat(new_chat.getKey(), "", "New Chat", ids);
         new_chat.setValue(chat);
-        chatView.loadChat(new_chat.getKey(), targetUserId);
+        mChatView.loadChat(new_chat.getKey(), targetUserId);
     }
 
     @Override
     public void initChat(String targetUserId) {
-        chatListener = new ChatListener(targetUserId);
-        getDBRef(CHATS).addValueEventListener(chatListener);
+        mChatListener = new ChatListener(targetUserId);
+        getDBRef(CHATS).addValueEventListener(mChatListener);
     }
 
-    private final class ChatListener implements ValueEventListener{
+    private final class ChatListener implements ValueEventListener {
         private String targetUserId;
-        ChatListener(String targetUserId){
+
+        ChatListener(String targetUserId) {
             this.targetUserId = targetUserId;
         }
+
         @Override
         public void onDataChange(DataSnapshot dataSnapshot) {
-            for(DataSnapshot chat : dataSnapshot.getChildren()){
+            for (DataSnapshot chat : dataSnapshot.getChildren()) {
                 List<String> ids = chat.getValue(Chat.class).getUserIds();
-                if (ids.contains(targetUserId)&&ids.contains(MyApp.getCurrentAccount().getId())) {
-                    chat_found = true;
-                    chatView.loadChat(chat.getKey(), targetUserId);
+                if (ids.contains(targetUserId) && ids.contains(MyApp.getCurrentAccount().getId())) {
+                    mChatFound = true;
+                    mChatView.loadChat(chat.getKey(), targetUserId);
                 }
             }
-            if(!chat_found){
+            if (!mChatFound) {
                 createChat(targetUserId);
             }
         }
 
         @Override
         public void onCancelled(DatabaseError databaseError) {
-            Log.e(TAG,databaseError.getMessage());
+            Log.e(TAG, databaseError.getMessage());
         }
     }
 
-    private final class UserListener implements ChildEventListener{
+    private final class UserListener implements ChildEventListener {
 
         @Override
         public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-            Log.d(TAG,"User Added.");
+            Log.d(TAG, "User Added.");
             UserAccount user = dataSnapshot.getValue(UserAccount.class);
-            if(!user.getId().equals(MyApp.getCurrentAccount().getId()) && !users.contains(user)){
-                users.add(user);
-                chatView.notifyDataSetChanged();
+            if (!user.getId().equals(MyApp.getCurrentAccount().getId()) && !mUsers.contains(user)) {
+                mUsers.add(user);
+                mChatView.notifyDataSetChanged();
             }
         }
 
         @Override
         public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-            Log.d(TAG,"User Changed.");
+            Log.d(TAG, "User Changed.");
             UserAccount updated_user = dataSnapshot.getValue(UserAccount.class);
-            for (UserAccount user: users) {
-                if(user.getId().equals(updated_user.getId())){
-                    Collections.replaceAll(users,user,updated_user);
-                    chatView.notifyDataSetChanged();
+            for (UserAccount user : mUsers) {
+                if (user.getId().equals(updated_user.getId())) {
+                    Collections.replaceAll(mUsers, user, updated_user);
+                    mChatView.notifyDataSetChanged();
                 }
             }
         }
 
         @Override
         public void onChildRemoved(DataSnapshot dataSnapshot) {
-            Log.d(TAG,"User Removed.");
+            Log.d(TAG, "User Removed.");
         }
 
         @Override
         public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-            Log.d(TAG,"User Moved.");
+            Log.d(TAG, "User Moved.");
         }
 
         @Override
         public void onCancelled(DatabaseError databaseError) {
-            Log.e(TAG,databaseError.getMessage());
+            Log.e(TAG, databaseError.getMessage());
         }
     }
 }

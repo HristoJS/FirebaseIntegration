@@ -2,20 +2,14 @@ package com.evilcorp.firebaseintegration.chat;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.v7.app.ActionBar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.GridView;
-import android.widget.ListView;
-import android.widget.SimpleAdapter;
 
 import com.evilcorp.firebaseintegration.R;
 import com.evilcorp.firebaseintegration.base.BaseActivity;
@@ -23,11 +17,8 @@ import com.evilcorp.firebaseintegration.friendlist.FriendListFragment;
 import com.evilcorp.firebaseintegration.adapter.ChatAdapter;
 import com.evilcorp.firebaseintegration.model.firebase.UserAccount;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
-import io.fabric.sdk.android.services.concurrency.AsyncTask;
 
 /**
  * A fragment representing a single Chat detail screen.
@@ -36,7 +27,7 @@ import io.fabric.sdk.android.services.concurrency.AsyncTask;
  * on handsets.
  */
 public class ChatActivity extends BaseActivity implements ChatContract.View, View.OnClickListener, TextWatcher {
-    private static final String TAG =  ChatActivity.class.getSimpleName();
+    private static final String TAG = ChatActivity.class.getSimpleName();
     public static final String CHAT_ID = "chat_id";
     public static final String USER_ID = "user_id";
 
@@ -44,7 +35,8 @@ public class ChatActivity extends BaseActivity implements ChatContract.View, Vie
     private LinearLayoutManager mLinearLayoutManager;
     private Button mSendButton;
     private EditText mMessageEditText;
-    private ChatContract.Presenter presenter;
+    private ChatContract.Presenter mPresenter;
+
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
@@ -57,13 +49,12 @@ public class ChatActivity extends BaseActivity implements ChatContract.View, Vie
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
         Bundle arguments = getIntent().getExtras();
-        if (arguments.containsKey(CHAT_ID)&&arguments.containsKey(USER_ID)) {
+        if (arguments.containsKey(CHAT_ID) && arguments.containsKey(USER_ID)) {
             String chatId = arguments.getString(CHAT_ID);
             String userId = arguments.getString(USER_ID);
-            presenter = new ChatPresenter(this,chatId,userId);
-        }
-        else {
-            Log.d(TAG,"No chats available.");
+            mPresenter = new ChatPresenter(this, chatId, userId);
+        } else {
+            Log.d(TAG, "No chats available.");
             finish();
         }
 
@@ -85,8 +76,8 @@ public class ChatActivity extends BaseActivity implements ChatContract.View, Vie
     @Override
     public void onDestroy() {
         super.onDestroy();
-        presenter.destroy();
-        presenter = null;
+        mPresenter.destroy();
+        mPresenter = null;
     }
 
     @Override
@@ -94,7 +85,7 @@ public class ChatActivity extends BaseActivity implements ChatContract.View, Vie
         mLinearLayoutManager = new LinearLayoutManager(getContext());
         mLinearLayoutManager.setStackFromEnd(true);
         mMessageRecyclerView.setLayoutManager(mLinearLayoutManager);
-        final ChatAdapter chatAdapter = new ChatAdapter(this,presenter.getChatReference(),chatParticipants);
+        final ChatAdapter chatAdapter = new ChatAdapter(this, mPresenter.getChatReference(), chatParticipants);
         chatAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
             @Override
             public void onItemRangeInserted(int positionStart, int itemCount) {
@@ -132,7 +123,7 @@ public class ChatActivity extends BaseActivity implements ChatContract.View, Vie
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.sendButton:
-                presenter.sendMessage(mMessageEditText.getText().toString(),getUserId(), new Date().getTime());
+                mPresenter.sendMessage(mMessageEditText.getText().toString(), getUserId(), new Date().getTime());
                 mMessageEditText.setText("");
                 break;
             default:
@@ -142,13 +133,13 @@ public class ChatActivity extends BaseActivity implements ChatContract.View, Vie
 
     @Override
     public String getUserId() {
-        return presenter.getUserId();
+        return mPresenter.getUserId();
     }
 
 
-
     @Override
-    public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
+    public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+    }
 
     @Override
     public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -160,11 +151,12 @@ public class ChatActivity extends BaseActivity implements ChatContract.View, Vie
     }
 
     @Override
-    public void afterTextChanged(Editable editable) {}
+    public void afterTextChanged(Editable editable) {
+    }
 
     @Override
     public List<UserAccount> getChatParticipants() {
-        return presenter.getChatParticipants();
+        return mPresenter.getChatParticipants();
     }
 
     @Override

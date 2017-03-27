@@ -26,15 +26,15 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         Preference connectionPref = findPreference(key);
-        switch(key) {
+        switch (key) {
             case ENABLE_NOTIFICATIONS:
-                Log.d(TAG,key);
+                Log.d(TAG, key);
                 break;
             case DISPLAY_NAME:
-                connectionPref.setSummary(sharedPreferences.getString(key,""));
+                connectionPref.setSummary(sharedPreferences.getString(key, ""));
                 break;
             case RUSSIAN_CURSES:
-                connectionPref.setSummary(sharedPreferences.getString(key,""));
+                connectionPref.setSummary(sharedPreferences.getString(key, ""));
                 break;
             default:
                 break;

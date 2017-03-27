@@ -3,6 +3,7 @@ package com.evilcorp.firebaseintegration;
 import android.app.Application;
 import android.os.StrictMode;
 import android.preference.PreferenceManager;
+import android.support.multidex.MultiDexApplication;
 
 import com.evilcorp.firebaseintegration.helper.FirebaseConnectionHelper;
 import com.evilcorp.firebaseintegration.helper.Time;
@@ -25,7 +26,7 @@ import io.fabric.sdk.android.Fabric;
 
 
 
-public class MyApp extends Application {
+public class MyApp extends MultiDexApplication {
 
     public static final int GOOGLE_AUTH_REQUEST_CODE = 0x2103;
     public static final int TWITTER_AUTH_REQUEST_CODE = TwitterAuthConfig.DEFAULT_AUTH_REQUEST_CODE;
@@ -36,18 +37,18 @@ public class MyApp extends Application {
 
     @Override
     public void onCreate() {
-        StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder()
-                .detectDiskReads()
-                .detectDiskWrites()
-                .detectAll()   // or .detectAll() for all detectable problems
-                .penaltyLog()
-                .build());
-        StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder()
-                .detectLeakedSqlLiteObjects()
-                .detectLeakedClosableObjects()
-                .penaltyLog()
-                .penaltyDeath()
-                .build());
+//        StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder()
+//                .detectDiskReads()
+//                .detectDiskWrites()
+//                .detectNetwork()   // or .detectAll() for all detectable problems
+//                .penaltyLog()
+//                .build());
+//        StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder()
+//                .detectLeakedSqlLiteObjects()
+//                .detectLeakedClosableObjects()
+//                .penaltyLog()
+//                .penaltyDeath()
+//                .build());
         super.onCreate();
         initFabric();
 

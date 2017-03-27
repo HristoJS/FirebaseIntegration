@@ -11,7 +11,7 @@ import java.util.List;
 
 public interface ChatContract {
 
-    interface View{
+    interface View {
 
         List<UserAccount> getChatParticipants();
 

@@ -38,12 +38,12 @@ public class MainInteractor {
     private FirebaseStorage mFirebaseStorage;
     private DatabaseReference mUserDbRef;
 
-    MainInteractor(){
+    MainInteractor() {
         initFirebase();
         updateUserStatus(UserStatus.ONLINE);
     }
 
-    private void initFirebase(){
+    private void initFirebase() {
         mAuth = FirebaseAuth.getInstance();
         mUser = mAuth.getCurrentUser();
         mFirebaseRemoteConfig = FirebaseRemoteConfig.getInstance();
@@ -58,12 +58,12 @@ public class MainInteractor {
 
     }
 
-    void logout(){
+    void logout() {
         LoginManager.getInstance().logOut();
         mAuth.signOut();
     }
 
-    void deleteUser(){
+    void deleteUser() {
         mUser.delete();
     }
 
@@ -76,9 +76,9 @@ public class MainInteractor {
     }
 
     int getAccountType() {
-        if(mUser.isAnonymous())
+        if (mUser.isAnonymous())
             return AccountType.GUEST;
-        else switch(mUser.getProviderId()){
+        else switch (mUser.getProviderId()) {
             case "FacebookLogin":
                 return AccountType.FACEBOOK;
             case "Twitter":
@@ -92,23 +92,21 @@ public class MainInteractor {
         }
     }
 
-    public void downloadImage(final FirebaseCallback<Uri> callback){
+    public void downloadImage(final FirebaseCallback<Uri> callback) {
         StorageReference storageRef = mFirebaseStorage.getReferenceFromUrl("gs://fir-integration-ea093.appspot.com");
         StorageReference pathReference = storageRef.child("icon_vader.jpg");
         pathReference.getDownloadUrl().addOnCompleteListener(new OnCompleteListener<Uri>() {
             @Override
             public void onComplete(@NonNull Task<Uri> task) {
-                if(task.isSuccessful()){
+                if (task.isSuccessful()) {
                     callback.success(task.getResult());
-                }
-                else callback.fail(task.getException());
+                } else callback.fail(task.getException());
             }
         });
     }
 
 
-
-    void getWelcomeMessage(final FirebaseCallback<String> callback){
+    void getWelcomeMessage(final FirebaseCallback<String> callback) {
         // cacheExpirationSeconds is set to cacheExpiration here, indicating that any previously
         // fetched and cached config would be considered expired because it would have been fetched
         // more than cacheExpiration seconds ago. Thus the next fetch would go to the server unless
@@ -123,25 +121,23 @@ public class MainInteractor {
                     String message = mFirebaseRemoteConfig.getString(WELCOME_MSG_KEY);
                     callback.success(message);
                     //mainView.setMessage(message);
-                }
-                else {
+                } else {
                     callback.fail(task.getException());
                 }
             }
         });
     }
 
-    private void updateUserStatus(int userStatus){
+    private void updateUserStatus(int userStatus) {
         UserAccount user = MyApp.getCurrentAccount();
         user.setUserStatus(userStatus);
         mUserDbRef.child(user.getId()).setValue(user).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
-                if(task.isSuccessful()){
-                    Log.d(TAG,"Changed status to online.");
-                }
-                else{
-                    Log.d(TAG,"Failed to change status");
+                if (task.isSuccessful()) {
+                    Log.d(TAG, "Changed status to online.");
+                } else {
+                    Log.d(TAG, "Failed to change status");
                 }
             }
         });

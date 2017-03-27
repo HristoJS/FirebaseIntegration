@@ -1,4 +1,5 @@
 package com.evilcorp.firebaseintegration.view;
+
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.os.SystemClock;
@@ -97,6 +98,7 @@ public class SplitView extends LinearLayout implements OnTouchListener {
         mHandle.setOnTouchListener(this);
 
     }
+
     @Override
     public boolean onTouch(View view, MotionEvent me) {
         // Only capture drag events if we start
@@ -115,13 +117,12 @@ public class SplitView extends LinearLayout implements OnTouchListener {
                 mPointerOffset = me.getRawX() - getPrimaryContentSize();
             }
             return true;
-        }
-        else if (me.getAction() == MotionEvent.ACTION_UP) {
+        } else if (me.getAction() == MotionEvent.ACTION_UP) {
             mDragging = false;
             if (
-                    mDragStartX <(me.getX()+TAP_DRIFT_TOLERANCE) &&
-                            mDragStartX > (me.getX() -TAP_DRIFT_TOLERANCE) &&
-                            mDragStartY <  (me.getY() + TAP_DRIFT_TOLERANCE) &&
+                    mDragStartX < (me.getX() + TAP_DRIFT_TOLERANCE) &&
+                            mDragStartX > (me.getX() - TAP_DRIFT_TOLERANCE) &&
+                            mDragStartY < (me.getY() + TAP_DRIFT_TOLERANCE) &&
                             mDragStartY > (me.getY() - TAP_DRIFT_TOLERANCE) &&
                             ((SystemClock.elapsedRealtime() - mDraggingStarted) < SINGLE_TAP_MAX_TIME)) {
                 if (isPrimaryContentMaximized() || isSecondaryContentMaximized()) {
@@ -133,9 +134,9 @@ public class SplitView extends LinearLayout implements OnTouchListener {
             return true;
         } else if (me.getAction() == MotionEvent.ACTION_MOVE) {
             if (getOrientation() == VERTICAL) {
-                setPrimaryContentHeight( (int)(me.getRawY() - mPointerOffset));
+                setPrimaryContentHeight((int) (me.getRawY() - mPointerOffset));
             } else {
-                setPrimaryContentWidth( (int)(me.getRawX() - mPointerOffset));
+                setPrimaryContentWidth((int) (me.getRawX() - mPointerOffset));
             }
         }
         return true;
@@ -212,9 +213,10 @@ public class SplitView extends LinearLayout implements OnTouchListener {
         mPrimaryContent.setLayoutParams(params);
         return true;
     }
+
     public boolean isPrimaryContentMaximized() {
-        if ( (getOrientation() == VERTICAL && (mSecondaryContent.getMeasuredHeight() < MAXIMIZED_VIEW_TOLERANCE_DIP) ) ||
-                (getOrientation() == HORIZONTAL && (mSecondaryContent.getMeasuredWidth() < MAXIMIZED_VIEW_TOLERANCE_DIP) )) {
+        if ((getOrientation() == VERTICAL && (mSecondaryContent.getMeasuredHeight() < MAXIMIZED_VIEW_TOLERANCE_DIP)) ||
+                (getOrientation() == HORIZONTAL && (mSecondaryContent.getMeasuredWidth() < MAXIMIZED_VIEW_TOLERANCE_DIP))) {
             return true;
         } else {
             return false;
@@ -224,8 +226,8 @@ public class SplitView extends LinearLayout implements OnTouchListener {
 
 
     public boolean isSecondaryContentMaximized() {
-        if ( (getOrientation() == VERTICAL && (mPrimaryContent.getMeasuredHeight() < MAXIMIZED_VIEW_TOLERANCE_DIP) ) ||
-                (getOrientation() == HORIZONTAL && (mPrimaryContent.getMeasuredWidth() < MAXIMIZED_VIEW_TOLERANCE_DIP) )) {
+        if ((getOrientation() == VERTICAL && (mPrimaryContent.getMeasuredHeight() < MAXIMIZED_VIEW_TOLERANCE_DIP)) ||
+                (getOrientation() == HORIZONTAL && (mPrimaryContent.getMeasuredWidth() < MAXIMIZED_VIEW_TOLERANCE_DIP))) {
             return true;
         } else {
             return false;
@@ -239,7 +241,6 @@ public class SplitView extends LinearLayout implements OnTouchListener {
     public void maximizeSecondaryContent() {
         maximizeContentPane(mSecondaryContent, mPrimaryContent);
     }
-
 
 
     private void maximizeContentPane(View toMaximize, View toUnMaximize) {

@@ -10,17 +10,17 @@ import com.evilcorp.firebaseintegration.model.firebase.AccountType;
 public class MainPresenter implements MainContract.Presenter {
     private static final String TAG = MainPresenter.class.getSimpleName();
     private MainContract.View mainView;
-    private MainInteractor interactor;
+    private MainInteractor mMainInteractor;
 
 
     public MainPresenter(MainContract.View view, MainInteractor interactor) {
         this.mainView = view;
-        this.interactor = interactor;
+        this.mMainInteractor = interactor;
     }
 
     @Override
     public void downloadImage(){
-        interactor.downloadImage(new FirebaseCallback<Uri>() {
+        mMainInteractor.downloadImage(new FirebaseCallback<Uri>() {
             @Override
             public void success(Uri result) {
                 mainView.setImage(result);
@@ -37,7 +37,7 @@ public class MainPresenter implements MainContract.Presenter {
     @Override
     public void logout() {
         try {
-            interactor.logout();
+            mMainInteractor.logout();
         }
         catch (Exception ex){
             ex.printStackTrace();
@@ -45,7 +45,7 @@ public class MainPresenter implements MainContract.Presenter {
         }
         finally {
             if(getAccountType() == AccountType.GUEST) {
-                interactor.deleteUser();
+                mMainInteractor.deleteUser();
             }
             MyApp.logout();
             mainView.logoutSuccess();
@@ -54,7 +54,7 @@ public class MainPresenter implements MainContract.Presenter {
 
     @Override
     public void getWelcomeMessage() {
-        interactor.getWelcomeMessage(new FirebaseCallback<String>() {
+        mMainInteractor.getWelcomeMessage(new FirebaseCallback<String>() {
             @Override
             public void success(String result) {
                 mainView.setMessage(result);
@@ -71,7 +71,7 @@ public class MainPresenter implements MainContract.Presenter {
 
     @Override
     public int getAccountType() {
-        return interactor.getAccountType();
+        return mMainInteractor.getAccountType();
     }
 
 

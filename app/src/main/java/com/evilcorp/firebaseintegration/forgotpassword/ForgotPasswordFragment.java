@@ -17,9 +17,10 @@ import com.evilcorp.firebaseintegration.base.BaseFragment;
  */
 public class ForgotPasswordFragment extends BaseFragment implements View.OnClickListener, ForgotPasswordContract.View {
 
-    private TextInputEditText email;
-    private TextInputEditText passcode;
-    ForgotPasswordContract.Presenter presenter;
+    private TextInputEditText mEmailEditText;
+    private TextInputEditText mPasscodeEditText;
+    ForgotPasswordContract.Presenter mPresenter;
+
     public ForgotPasswordFragment() {
         // Required empty public constructor
     }
@@ -33,24 +34,24 @@ public class ForgotPasswordFragment extends BaseFragment implements View.OnClick
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_forgot_password, container, false);
-        email = (TextInputEditText) root.findViewById(R.id.email);
-        passcode = (TextInputEditText) root.findViewById(R.id.passcode);
+        mEmailEditText = (TextInputEditText) root.findViewById(R.id.email_edittext);
+        mPasscodeEditText = (TextInputEditText) root.findViewById(R.id.passcode);
         Button send_email_button = (Button) root.findViewById(R.id.send_email_button);
         send_email_button.setOnClickListener(this);
         Button validate_passcode_button = (Button) root.findViewById(R.id.validate_passcode_button);
         validate_passcode_button.setOnClickListener(this);
-        presenter = new ForgotPasswordPresenter(this);
+        mPresenter = new ForgotPasswordPresenter(this);
         return root;
     }
 
     @Override
     public void onClick(View view) {
-        switch (view.getId()){
+        switch (view.getId()) {
             case R.id.send_email_button:
-                presenter.sendResetEmail(email.getText().toString());
+                mPresenter.sendResetEmail(mEmailEditText.getText().toString());
                 break;
             case R.id.validate_passcode_button:
-                presenter.validatePasscode(passcode.getText().toString());
+                mPresenter.validatePasscode(mPasscodeEditText.getText().toString());
                 break;
             default:
                 break;
@@ -64,7 +65,7 @@ public class ForgotPasswordFragment extends BaseFragment implements View.OnClick
 
     @Override
     public void sendEmailFail() {
-        showAlert("Wrong email.");
+        showAlert("Wrong mEmailEditText.");
     }
 
     @Override

@@ -6,16 +6,17 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
+import android.support.v7.widget.AppCompatButton;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Toast;
 
 import com.evilcorp.firebaseintegration.R;
 import com.evilcorp.firebaseintegration.base.BaseActivity;
 import com.evilcorp.firebaseintegration.findaddress.FindAddressFragment;
 import com.evilcorp.firebaseintegration.friendlist.FriendListFragment;
+import com.evilcorp.firebaseintegration.helper.NetworkHelper;
 import com.evilcorp.firebaseintegration.login.LoginActivity;
 import com.evilcorp.firebaseintegration.model.firebase.AccountType;
 import com.evilcorp.firebaseintegration.settings.SettingsFragment;
@@ -25,35 +26,42 @@ import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.InterstitialAd;
 import com.google.android.gms.appinvite.AppInviteInvitation;
 
-import java.util.List;
-
 public class MainActivity extends BaseActivity implements MainContract.View {
     private static final String TAG = "MainActivity";
     private static final int REQUEST_INVITE = 512;
     public static final String PROFILE_EXTRA = "PROFILE";
     private static final int BILLING_RESPONSE_RESULT_OK = 0;
-    private MainContract.Presenter presenter;
+
+    private int mCurrentFragmentId;
+    private MainContract.Presenter mPresenter;
     private InterstitialAd mInterstitialAd;
-    private static int currentFragmentId;
+    private AppCompatButton mLogoutButton;
 
     //region Activity methods
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        presenter = new MainPresenter(this, new MainInteractor());
-        LoadFragment(new FriendListFragment(),true);
-        currentFragmentId = R.id.action_chat;
+        mPresenter = new MainPresenter(this, new MainInteractor());
+        mLogoutButton = (AppCompatButton) findViewById(R.id.logout_button);
+        mLogoutButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                logout();
+            }
+        });
+        loadFragment(new FriendListFragment(), true);
+        mCurrentFragmentId = R.id.action_chat;
         addBottomNavigation();
         addUserPanel();
-
+        NetworkHelper.isNetworkAvailable(this);
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        presenter.getWelcomeMessage();
-        presenter.downloadImage();
+        mPresenter.getWelcomeMessage();
+        mPresenter.downloadImage();
         //initAds();
     }
 
@@ -68,40 +76,40 @@ public class MainActivity extends BaseActivity implements MainContract.View {
                     Toast.makeText(this, "Invite sent.", Toast.LENGTH_SHORT).show();
                 }
             } else {
-                Log.e(TAG,"Send failed.");
+                Log.e(TAG, "Send failed.");
             }
         }
     }
     //endregion
 
     //region Private methods
-    private void addBottomNavigation(){
+    private void addBottomNavigation() {
         BottomNavigationView bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottomNavigationView);
-        if(bottomNavigationView != null) {
+        if (bottomNavigationView != null) {
             bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
                 @Override
                 public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                     int itemId = item.getItemId();
-                    if(itemId != currentFragmentId){
+                    if (itemId != mCurrentFragmentId) {
                         switch (itemId) {
                             case R.id.action_chat:
-                                if (presenter.getAccountType() == AccountType.GUEST) {
+                                if (mPresenter.getAccountType() == AccountType.GUEST) {
                                     showAlert("This feature is only available for registered users.");
                                     return false;
                                 } else {
-                                    LoadFragment(new FriendListFragment(), true);
+                                    loadFragment(new FriendListFragment(), true);
                                 }
                                 break;
                             case R.id.action_address:
-                                LoadFragment(new FindAddressFragment(), true);
+                                loadFragment(new FindAddressFragment(), true);
                                 break;
                             case R.id.action_settings:
-                                LoadFragment(new SettingsFragment(), true);
+                                loadFragment(new SettingsFragment(), true);
                                 break;
                             default:
                                 break;
                         }
-                        currentFragmentId = itemId;
+                        mCurrentFragmentId = itemId;
                     }
                     return true;
                 }
@@ -109,15 +117,7 @@ public class MainActivity extends BaseActivity implements MainContract.View {
         }
     }
 
-    private void LoadFragment(Fragment fragment, boolean backstackEnabled){
-        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragment_placeholder, fragment);
-        if(backstackEnabled)
-            transaction.addToBackStack(null);
-        transaction.commit();
-    }
-
-    private void inviteFriend(){
+    private void inviteFriend() {
         Intent intent = new AppInviteInvitation.IntentBuilder(getString(R.string.invitation_title))
                 .setMessage(getString(R.string.invitation_message))
                 //.setCustomImage(imageUri)
@@ -126,13 +126,13 @@ public class MainActivity extends BaseActivity implements MainContract.View {
         startActivityForResult(intent, REQUEST_INVITE);
     }
 
-    private void logout(){
+    private void logout() {
         showAlert("Are you sure you want to logout?", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                presenter.logout();
+                mPresenter.logout();
             }
-        },true);
+        }, true);
     }
     //endregion
 
@@ -165,7 +165,7 @@ public class MainActivity extends BaseActivity implements MainContract.View {
     //endregion
 
     //region Ads
-    private void initAds(){
+    private void initAds() {
         AdView mAdView = new AdView(this);
         AdRequest adRequest = new AdRequest.Builder().build();
         mAdView.loadAd(adRequest);
@@ -179,10 +179,12 @@ public class MainActivity extends BaseActivity implements MainContract.View {
         });
         requestNewInterstitial();
     }
-    private void loadAd(){
+
+    private void loadAd() {
         if (mInterstitialAd.isLoaded())
             mInterstitialAd.show();
     }
+
     private void requestNewInterstitial() {
         AdRequest adRequest = new AdRequest.Builder().build();
         mInterstitialAd.loadAd(adRequest);

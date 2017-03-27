@@ -16,9 +16,9 @@ import com.twitter.sdk.android.core.TwitterSession;
  * Created by hristo.stoyanov on 09-Jan-17.
  */
 
-public interface LoginContract{
-    interface View {
+public interface LoginContract {
 
+    interface View {
 
         void loginSuccess(boolean email_verified);
 

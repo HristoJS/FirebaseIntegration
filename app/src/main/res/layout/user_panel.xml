@@ -8,6 +8,7 @@
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:contentDescription="@string/userAvatar"
+        android:layout_margin="@dimen/default_margin"
         app:srcCompat="@drawable/ic_person_black_24px"
         android:id="@+id/userAvatar"/>
 
@@ -38,7 +39,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/userName"
-        android:layout_margin="5dp"
+        android:layout_margin="@dimen/default_margin"
         android:textSize="20sp"
         android:textStyle="bold"
         android:text="@string/default_name"
@@ -48,10 +49,19 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/userEmail"
-        android:layout_margin="5dp"
+        android:layout_margin="@dimen/default_margin"
         android:textSize="15sp"
         android:text="@string/default_email"
         android:layout_below="@id/userName"
         android:layout_toEndOf="@id/userAvatar"/>
+
+    <android.support.v7.widget.AppCompatButton
+        android:layout_width="@dimen/button_size"
+        android:layout_height="@dimen/button_size"
+        android:id="@+id/logout_button"
+        android:background="@drawable/ic_logout_black_24px"
+        android:layout_margin="@dimen/default_margin"
+        android:layout_alignParentEnd="true"
+        android:layout_below="@id/userStatusSpinner"/>
 
 </RelativeLayout>

@@ -8,72 +8,72 @@ import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 public class LoginPresenter implements LoginContract.Presenter, FirebaseCallback<Void> {
     private static final String TAG = LoginPresenter.class.getSimpleName();
 
-    private LoginContract.View loginView;
-    private LoginInteractor interactor;
+    private LoginContract.View mLoginView;
+    private LoginInteractor mLoginInteractor;
 
-    public LoginPresenter(LoginContract.View view, LoginInteractor loginInteractor){
-        this.loginView = view;
-        this.interactor = loginInteractor;
-        interactor.setCallback(this);
+    public LoginPresenter(LoginContract.View view, LoginInteractor loginInteractor) {
+        this.mLoginView = view;
+        this.mLoginInteractor = loginInteractor;
+        mLoginInteractor.setCallback(this);
     }
 
     @Override
     public LoginInteractor.TwitterLoginHandler getTwitterHandler() {
-        return interactor.getTwitterLoginHandler();
+        return mLoginInteractor.getTwitterLoginHandler();
     }
 
     @Override
     public LoginInteractor.FacebookLoginHandler getFacebookHandler() {
-        return interactor.getFacebookLoginHandler();
+        return mLoginInteractor.getFacebookLoginHandler();
     }
 
     @Override
     public void onDestroy() {
-        interactor.setCallback(null);
-        interactor.destroy();
-        interactor = null;
+        mLoginInteractor.setCallback(null);
+        mLoginInteractor.destroy();
+        mLoginInteractor = null;
     }
 
     @Override
     public boolean loginWithEmail(String email, String password) {
         // Reset errors.
-        loginView.setEmailError(0);
-        loginView.setPasswordError(0);
+        mLoginView.setEmailError(0);
+        mLoginView.setPasswordError(0);
 
         // Check for a valid email address.
         if (!isEmailValid(email)) {
-            loginView.setEmailError(R.string.error_invalid_email);
+            mLoginView.setEmailError(R.string.error_invalid_email);
             return false;
         }
 
         // Check for a valid password, if the user entered one.
         if (!isPasswordValid(password)) {
-            loginView.setPasswordError(R.string.error_incorrect_password);
+            mLoginView.setPasswordError(R.string.error_incorrect_password);
             return false;
         }
 
-        interactor.loginWithEmail(email,password);
+        mLoginInteractor.loginWithEmail(email, password);
         return true;
     }
 
     @Override
     public void loginWithGoogle(GoogleSignInResult result) {
         if (result.isSuccess()) {
-            interactor.loginWithGoogle(result);
+            mLoginInteractor.loginWithGoogle(result);
         } else {
-            loginView.loginFail("Google sign-in failed.");
+            mLoginView.loginFail("Google sign-in failed.");
         }
     }
 
     @Override
     public void loginAsGuest() {
-        interactor.loginAsGuest();
+        mLoginInteractor.loginAsGuest();
         //mAuth.signInAnonymously().addOnCompleteListener(this);
     }
 
     @Override
     public boolean autoLogin() {
-        return interactor.isUserLoggedIn();
+        return mLoginInteractor.isUserLoggedIn();
     }
 
     @Override
@@ -88,11 +88,11 @@ public class LoginPresenter implements LoginContract.Presenter, FirebaseCallback
 
     @Override
     public void success(Void v) {
-        loginView.loginSuccess(true);
+        mLoginView.loginSuccess(true);
     }
 
     @Override
     public void fail(Exception exception) {
-        loginView.loginFail(exception.getMessage());
+        mLoginView.loginFail(exception.getMessage());
     }
 }

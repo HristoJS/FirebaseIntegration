@@ -1,34 +1,35 @@
 package com.evilcorp.firebaseintegration.login;
 
 
+import com.google.android.gms.common.SignInButton;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TextInputEditText;
-import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.AppCompatButton;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
-import android.widget.Button;
 import android.widget.TextView;
 
 import com.evilcorp.firebaseintegration.MyApp;
 import com.evilcorp.firebaseintegration.R;
 import com.evilcorp.firebaseintegration.base.BaseFragment;
 import com.evilcorp.firebaseintegration.forgotpassword.ForgotPasswordFragment;
-import com.evilcorp.firebaseintegration.helper.Util;
-import com.evilcorp.firebaseintegration.register.RegisterFragment;
+import com.evilcorp.firebaseintegration.helper.NetworkHelper;
 import com.evilcorp.firebaseintegration.main.MainActivity;
+import com.evilcorp.firebaseintegration.register.RegisterFragment;
 import com.facebook.CallbackManager;
-import com.facebook.FacebookSdk;
 import com.facebook.login.LoginManager;
-import com.facebook.login.widget.LoginButton;
-import com.google.android.gms.common.SignInButton;
-import com.twitter.sdk.android.core.identity.TwitterLoginButton;
+import com.twitter.sdk.android.core.identity.TwitterAuthClient;
+
+import java.util.Arrays;
+import java.util.Collection;
 
 
 /**
@@ -39,10 +40,10 @@ public class LoginFragment extends BaseFragment implements LoginContract.View, V
     private TextInputEditText mEmailView;
     private TextInputEditText mPasswordView;
 
-    private TwitterLoginButton twitterLoginButton;
-
-    private LoginContract.Presenter loginPresenter;
+    private LoginContract.Presenter mLoginPresenter;
     private CallbackManager mFbCallbackManager;
+    private LoginManager mFacebookLoginManger;
+    private TwitterAuthClient mTwitterAuthClient;
 
     public LoginFragment() {
         // Required empty public constructor
@@ -51,8 +52,8 @@ public class LoginFragment extends BaseFragment implements LoginContract.View, V
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        loginPresenter = new LoginPresenter(this, new LoginInteractor());
-        if(loginPresenter.autoLogin()){
+        mLoginPresenter = new LoginPresenter(this, new LoginInteractor());
+        if (mLoginPresenter.autoLogin()) {
             startActivity(new Intent(getActivity(), MainActivity.class));
             getActivity().finish();
         }
@@ -64,30 +65,32 @@ public class LoginFragment extends BaseFragment implements LoginContract.View, V
         // Inflate the layout for this fragment
         View root = inflater.inflate(R.layout.fragment_login, container, false);
 
-        mEmailView = (TextInputEditText) root.findViewById(R.id.email);
-        mPasswordView = (TextInputEditText) root.findViewById(R.id.password);
+        mEmailView = (TextInputEditText) root.findViewById(R.id.email_edittext);
+        mPasswordView = (TextInputEditText) root.findViewById(R.id.password_edittext);
         mPasswordView.setOnEditorActionListener(this);
 
-        Button mEmailSignInButton = (Button) root.findViewById(R.id.email_sign_in_button);
-        Button mGuestSignInButton = (Button) root.findViewById(R.id.guest_sign_in_button);
-        Button mForgotPassword = (Button) root.findViewById(R.id.forgot_password_button);
-        Button mRegisterButton = (Button) root.findViewById(R.id.register_button);
-        SignInButton googleButton = (SignInButton) root.findViewById(R.id.google_button);
-        setGooglePlusButtonText(googleButton,"Log in with Google");
-        LoginButton facebookButton = (LoginButton) root.findViewById(R.id.facebook_button);
-        twitterLoginButton = (TwitterLoginButton) root.findViewById(R.id.twitter_button);
-        twitterLoginButton.setCallback(loginPresenter.getTwitterHandler());
+        AppCompatButton mEmailSignInButton = (AppCompatButton) root.findViewById(R.id.email_sign_in_button);
+        AppCompatButton mGuestSignInButton = (AppCompatButton) root.findViewById(R.id.guest_sign_in_button);
+        AppCompatButton mForgotPassword = (AppCompatButton) root.findViewById(R.id.forgot_password_button);
+        AppCompatButton mRegisterButton = (AppCompatButton) root.findViewById(R.id.register_button);
+        AppCompatButton googleButton = (AppCompatButton) root.findViewById(R.id.google_button);
+        AppCompatButton facebookButton = (AppCompatButton) root.findViewById(R.id.facebook_button);
+        AppCompatButton twitterLoginButton = (AppCompatButton) root.findViewById(R.id.twitter_button);
+
+        mTwitterAuthClient = new TwitterAuthClient();
 
         mEmailSignInButton.setOnClickListener(this);
         googleButton.setOnClickListener(this);
         mGuestSignInButton.setOnClickListener(this);
         mForgotPassword.setOnClickListener(this);
         mRegisterButton.setOnClickListener(this);
-
+        facebookButton.setOnClickListener(this);
+        twitterLoginButton.setOnClickListener(this);
 
         //facebookButton.setReadPermissions("email");
         mFbCallbackManager = CallbackManager.Factory.create();
-        facebookButton.registerCallback(mFbCallbackManager, loginPresenter.getFacebookHandler());
+        mFacebookLoginManger = LoginManager.getInstance();
+        mFacebookLoginManger.registerCallback(mFbCallbackManager, mLoginPresenter.getFacebookHandler());
         return root;
     }
 
@@ -95,10 +98,10 @@ public class LoginFragment extends BaseFragment implements LoginContract.View, V
     public void onDestroy() {
         super.onDestroy();
         mFbCallbackManager = null;
-        loginPresenter.onDestroy();
+        mLoginPresenter.onDestroy();
     }
 
-    public void googleLogin(){
+    public void googleLogin() {
         showProgress(getString(R.string.login_message));
         Intent signInIntent = MyApp.getGoogleSignInApi().getSignInIntent(MyApp.getGoogleApiClient());
         getActivity().startActivityForResult(signInIntent, MyApp.GOOGLE_AUTH_REQUEST_CODE);
@@ -108,21 +111,20 @@ public class LoginFragment extends BaseFragment implements LoginContract.View, V
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         showProgress(getString(R.string.login_message));
-        Log.d("Data",data.toString());
-        if(resultCode == Activity.RESULT_OK) {
+        Log.d("Data", data.toString());
+        if (resultCode == Activity.RESULT_OK) {
             switch (requestCode) {
                 case MyApp.GOOGLE_AUTH_REQUEST_CODE:
-                    loginPresenter.loginWithGoogle(MyApp.getGoogleSignInApi().getSignInResultFromIntent(data));
+                    mLoginPresenter.loginWithGoogle(MyApp.getGoogleSignInApi().getSignInResultFromIntent(data));
                     break;
                 case MyApp.TWITTER_AUTH_REQUEST_CODE:
-                    twitterLoginButton.onActivityResult(requestCode, resultCode, data);
+                    mTwitterAuthClient.onActivityResult(requestCode, resultCode, data);
                     break;
                 default:
                     mFbCallbackManager.onActivityResult(requestCode, resultCode, data);
                     break;
             }
-        }
-        else{
+        } else {
             loginFail(getString(R.string.login_fail));
         }
     }
@@ -145,7 +147,7 @@ public class LoginFragment extends BaseFragment implements LoginContract.View, V
     @Override
     public void loginSuccess(boolean email_verified) {
         dismissProgress();
-        Intent mainIntent = new Intent(getActivity(),MainActivity.class);
+        Intent mainIntent = new Intent(getActivity(), MainActivity.class);
         startActivity(mainIntent);
         getActivity().finish();
     }
@@ -158,20 +160,20 @@ public class LoginFragment extends BaseFragment implements LoginContract.View, V
 
     @Override
     public void setEmailError(int error) {
-        if(error!=0)
+        if (error != 0)
             mEmailView.setError(getString(error));
     }
 
     @Override
     public void setPasswordError(int error) {
-        if(error!=0)
+        if (error != 0)
             mPasswordView.setError(getString(error));
     }
 
     @Override
     public void onClick(View view) {
         int viewId = view.getId();
-        switch(viewId){
+        switch (viewId) {
             case R.id.email_sign_in_button:
                 login();
                 break;
@@ -186,22 +188,30 @@ public class LoginFragment extends BaseFragment implements LoginContract.View, V
                 break;
             case R.id.forgot_password_button:
                 ((LoginActivity) getActivity()).loadFragment(new ForgotPasswordFragment(), true);
+                break;
+            case R.id.twitter_button:
+                mTwitterAuthClient.authorize(getActivity(), mLoginPresenter.getTwitterHandler());
+                break;
+            case R.id.facebook_button:
+                Collection<String> permissions = Arrays.asList("public_profile", "user_friends");
+                mFacebookLoginManger.logInWithReadPermissions(getActivity(), permissions);
+                break;
             default:
                 break;
         }
     }
 
-    private void guestLogin(){
-        if(!Util.isNetworkAvailable(getContext())){
+    private void guestLogin() {
+        if (!NetworkHelper.isNetworkAvailable(getContext())) {
             showAlert(getString(R.string.network_unavailable));
             return;
         }
         showProgress(getString(R.string.login_message));
-        loginPresenter.loginAsGuest();
+        mLoginPresenter.loginAsGuest();
     }
 
-    private void login(){
-        if(!Util.isNetworkAvailable(getContext())){
+    private void login() {
+        if (!NetworkHelper.isNetworkAvailable(getContext())) {
             showAlert(getString(R.string.network_unavailable));
             return;
         }
@@ -209,8 +219,8 @@ public class LoginFragment extends BaseFragment implements LoginContract.View, V
         String email = mEmailView.getText().toString();
         String password = mPasswordView.getText().toString();
 
-        boolean fields_ok = loginPresenter.loginWithEmail(email,password);
-        if(!fields_ok){
+        boolean fields_ok = mLoginPresenter.loginWithEmail(email, password);
+        if (!fields_ok) {
             dismissProgress();
         }
     }
@@ -220,8 +230,7 @@ public class LoginFragment extends BaseFragment implements LoginContract.View, V
         if (id == R.id.login || id == EditorInfo.IME_NULL) {
             login();
             return true;
-        }
-        else return false;
+        } else return false;
     }
 
 }

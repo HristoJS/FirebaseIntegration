@@ -8,7 +8,7 @@ import android.net.NetworkInfo;
  * Created by hristo.stoyanov on 23-Feb-17.
  */
 
-public class Util {
+public class NetworkHelper {
     public static boolean isNetworkAvailable(Context context) {
         int[] networkTypes = {ConnectivityManager.TYPE_MOBILE,
                 ConnectivityManager.TYPE_WIFI};
