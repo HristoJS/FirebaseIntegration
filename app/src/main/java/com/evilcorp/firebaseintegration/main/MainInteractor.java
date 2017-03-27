@@ -130,6 +130,7 @@ public class MainInteractor {
 
     private void updateUserStatus(int userStatus) {
         UserAccount user = MyApp.getCurrentAccount();
+        if(user.getAccountType() == AccountType.GUEST) return;
         user.setUserStatus(userStatus);
         mUserDbRef.child(user.getId()).setValue(user).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override

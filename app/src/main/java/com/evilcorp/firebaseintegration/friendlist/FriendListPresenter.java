@@ -3,6 +3,7 @@ package com.evilcorp.firebaseintegration.friendlist;
 import android.util.Log;
 
 import com.evilcorp.firebaseintegration.MyApp;
+import com.evilcorp.firebaseintegration.model.firebase.AccountType;
 import com.evilcorp.firebaseintegration.model.firebase.Chat;
 import com.evilcorp.firebaseintegration.model.firebase.UserAccount;
 import com.google.firebase.database.ChildEventListener;
@@ -20,7 +21,7 @@ import java.util.List;
 class FriendListPresenter implements FriendListContract.Presenter {
     private static final String TAG = FriendListPresenter.class.getSimpleName();
     private static final String CHATS = "chats";
-    private static final String USERS = "mUsers";
+    private static final String USERS = "users";
 
     private FriendListContract.View mChatView;
     private List<UserAccount> mUsers;
@@ -53,7 +54,7 @@ class FriendListPresenter implements FriendListContract.Presenter {
         mUsers = new ArrayList<>();
         mUserListener = new UserListener();
         mChatView.setupRecyclerView(mUsers);
-        getDBRef(USERS).orderByChild("lastOnline").addChildEventListener(mUserListener);
+        getDBRef(USERS).addChildEventListener(mUserListener);
     }
 
     private void createChat(String targetUserId) {
@@ -105,7 +106,11 @@ class FriendListPresenter implements FriendListContract.Presenter {
         public void onChildAdded(DataSnapshot dataSnapshot, String s) {
             Log.d(TAG, "User Added.");
             UserAccount user = dataSnapshot.getValue(UserAccount.class);
-            if (!user.getId().equals(MyApp.getCurrentAccount().getId()) && !mUsers.contains(user)) {
+            UserAccount currentUser = MyApp.getCurrentAccount();
+            if(currentUser == null || currentUser.getAccountType() == AccountType.GUEST){
+                return;
+            }
+            if (!user.getId().equals(currentUser.getId()) && !mUsers.contains(user)) {
                 mUsers.add(user);
                 mChatView.notifyDataSetChanged();
             }
@@ -115,6 +120,9 @@ class FriendListPresenter implements FriendListContract.Presenter {
         public void onChildChanged(DataSnapshot dataSnapshot, String s) {
             Log.d(TAG, "User Changed.");
             UserAccount updated_user = dataSnapshot.getValue(UserAccount.class);
+            if(updated_user == null || updated_user.getAccountType() == AccountType.GUEST){
+                return;
+            }
             for (UserAccount user : mUsers) {
                 if (user.getId().equals(updated_user.getId())) {
                     Collections.replaceAll(mUsers, user, updated_user);

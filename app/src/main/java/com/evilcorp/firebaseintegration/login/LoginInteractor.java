@@ -7,6 +7,7 @@ import android.util.Log;
 import com.evilcorp.firebaseintegration.MyApp;
 import com.evilcorp.firebaseintegration.helper.FirebaseCallback;
 import com.evilcorp.firebaseintegration.helper.FirebaseConnectionHelper;
+import com.evilcorp.firebaseintegration.model.firebase.AccountType;
 import com.evilcorp.firebaseintegration.model.firebase.Event;
 import com.evilcorp.firebaseintegration.model.firebase.UserAccount;
 import com.facebook.FacebookCallback;
@@ -81,7 +82,8 @@ public class LoginInteractor implements OnCompleteListener<AuthResult> {
     }
 
     boolean isUserLoggedIn() {
-        return FirebaseAuth.getInstance().getCurrentUser() != null;
+        UserAccount account = MyApp.getCurrentAccount();
+        return (account != null && account.getAccountType() != AccountType.GUEST);
     }
 
     //endregion
@@ -114,14 +116,15 @@ public class LoginInteractor implements OnCompleteListener<AuthResult> {
         }
     }
 
-    private void saveUserToDB(FirebaseUser firebaseUser) {
+    private void saveUserToDB(final FirebaseUser firebaseUser) {
         final UserAccount user = new UserAccount(firebaseUser);
         Log.d(TAG, user.toString());
         final String userId = firebaseUser.getUid();
+
         mUserDbRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                if (!dataSnapshot.hasChild(userId)) {
+                if (!dataSnapshot.hasChild(userId) && !firebaseUser.isAnonymous()) {
                     mUserDbRef.child(userId).setValue(user)
                             .addOnFailureListener(new OnFailureListener() {
                                 @Override
@@ -129,6 +132,7 @@ public class LoginInteractor implements OnCompleteListener<AuthResult> {
                                     e.printStackTrace();
                                 }
                             });
+                    Log.d(TAG,"User Added to DB.");
                 }
             }
 

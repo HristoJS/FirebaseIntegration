@@ -19,6 +19,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.evilcorp.firebaseintegration.model.firebase.AccountType;
 import com.evilcorp.firebaseintegration.view.ExpandablePanel;
 import com.evilcorp.firebaseintegration.MyApp;
 import com.evilcorp.firebaseintegration.R;
@@ -81,7 +82,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         mAlertDialog = builder.setTitle(getResources().getString(R.string.app_name))
                 .setMessage(msg)
                 .setCancelable(false)
-                .setIcon(android.R.drawable.ic_dialog_alert)
+                .setIcon(R.drawable.ic_firebase_logo)
                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
@@ -96,7 +97,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         builder.setTitle(getResources().getString(R.string.app_name))
                 .setMessage(msg)
                 .setCancelable(false)
-                .setIcon(android.R.drawable.ic_dialog_alert)
+                .setIcon(R.drawable.ic_firebase_logo)
                 .setPositiveButton("OK", onClickListener);
         if(cancelable){
             builder.setNegativeButton("GO BACK", new DialogInterface.OnClickListener() {
@@ -131,12 +132,14 @@ public abstract class BaseActivity extends AppCompatActivity {
                 }
             });
             ImageView userAvatar = (ImageView) findViewById(R.id.userAvatar);
-            Glide.with(this)
-                    .load(user.getAvatar())
-                    .asBitmap()
-                    .centerCrop()
-                    .into(new RounderCornerImage(this, userAvatar));
-
+            String avatar = user.getAvatar();
+            if(avatar != null) {
+                Glide.with(this)
+                        .load(user.getAvatar())
+                        .asBitmap()
+                        .centerCrop()
+                        .into(new RounderCornerImage(this, userAvatar));
+            }
             TextView userName = (TextView) findViewById(R.id.userName);
             userName.setText(user.getName());
 
@@ -146,6 +149,11 @@ public abstract class BaseActivity extends AppCompatActivity {
             final ImageView userStatusIcon = (ImageView) findViewById(R.id.userStatusIcon);
 
             Spinner userStatusSpinner = (Spinner) findViewById(R.id.userStatusSpinner);
+            if(user.getAccountType() == AccountType.GUEST){
+                userStatusSpinner.setVisibility(View.INVISIBLE);
+                userStatusIcon.setVisibility(View.INVISIBLE);
+                return;
+            }
             // Create an ArrayAdapter using the string array and a default spinner layout
             ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item,UserStatus.getAll());
             // Specify the layout to use when the list of choices appears
@@ -188,8 +196,9 @@ public abstract class BaseActivity extends AppCompatActivity {
     }
 
     public void loadFragment(Fragment fragment, boolean backstackEnabled){
-        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragment_placeholder, fragment);
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right,android.R.anim.slide_in_left,android.R.anim.slide_out_right);
+        transaction.replace(R.id.fragment_placeholder, fragment);
         if(backstackEnabled)
             transaction.addToBackStack(null);
         transaction.commit();

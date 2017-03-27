@@ -67,7 +67,7 @@ public abstract class BaseFragment extends Fragment {
         mAlertDialog = builder.setTitle(getResources().getString(R.string.app_name))
                 .setMessage(msg)
                 .setCancelable(false)
-                .setIcon(android.R.drawable.ic_dialog_alert)
+                .setIcon(R.drawable.ic_firebase_logo)
                 .setPositiveButton("OK", onClickListener).create();
         mAlertDialog.show();
     }
@@ -76,7 +76,7 @@ public abstract class BaseFragment extends Fragment {
         mAlertDialog = builder.setTitle(getResources().getString(R.string.app_name))
                 .setMessage(msg)
                 .setCancelable(false)
-                .setIcon(android.R.drawable.ic_dialog_alert)
+                .setIcon(R.drawable.ic_firebase_logo)
                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {

@@ -14,7 +14,6 @@ import android.widget.Toast;
 
 import com.evilcorp.firebaseintegration.R;
 import com.evilcorp.firebaseintegration.base.BaseActivity;
-import com.evilcorp.firebaseintegration.findaddress.FindAddressFragment;
 import com.evilcorp.firebaseintegration.friendlist.FriendListFragment;
 import com.evilcorp.firebaseintegration.helper.NetworkHelper;
 import com.evilcorp.firebaseintegration.login.LoginActivity;
@@ -101,7 +100,6 @@ public class MainActivity extends BaseActivity implements MainContract.View {
                                 }
                                 break;
                             case R.id.action_address:
-                                loadFragment(new FindAddressFragment(), true);
                                 break;
                             case R.id.action_settings:
                                 loadFragment(new SettingsFragment(), true);

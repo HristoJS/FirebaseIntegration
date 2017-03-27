@@ -8,7 +8,6 @@
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:contentDescription="@string/userAvatar"
-        android:layout_margin="@dimen/default_margin"
         app:srcCompat="@drawable/ic_person_black_24px"
         android:id="@+id/userAvatar"/>
 
@@ -16,8 +15,8 @@
         android:id="@+id/userStatusSpinner"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
         android:gravity="center_vertical"
-        android:layout_marginTop="5dp"
         android:layout_alignParentEnd="true" />
     <ImageView
         android:layout_width="wrap_content"
@@ -39,8 +38,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/userName"
-        android:layout_margin="@dimen/default_margin"
         android:textSize="20sp"
+        android:layout_marginStart="@dimen/default_margin"
         android:textStyle="bold"
         android:text="@string/default_name"
         android:layout_toEndOf="@id/userAvatar"

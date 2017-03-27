@@ -9,7 +9,9 @@
     android:layout_marginLeft="16dp"
     android:layout_marginRight="16dp"
     app:layout_behavior="@string/appbar_scrolling_view_behavior">
-
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
     <android.support.v7.widget.RecyclerView
         android:id="@+id/user_list"
         android:name="com.evilcorp.firebaseintegration.activity.ChatListFragment"
@@ -19,4 +21,11 @@
         tools:mContext="com.evilcorp.firebaseintegration.friendlist.FriendListFragment"
         tools:listitem="@layout/friend_detail" />
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/nofriends_textview"
+        android:text="@string/nofriends_text"
+        android:layout_centerInParent="true"/>
+    </RelativeLayout>
 </android.support.v4.widget.SwipeRefreshLayout>

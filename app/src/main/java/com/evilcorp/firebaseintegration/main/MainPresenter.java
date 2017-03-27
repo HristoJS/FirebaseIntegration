@@ -47,7 +47,9 @@ public class MainPresenter implements MainContract.Presenter {
             if(getAccountType() == AccountType.GUEST) {
                 mMainInteractor.deleteUser();
             }
-            MyApp.logout();
+            else {
+                MyApp.logout();
+            }
             mainView.logoutSuccess();
         }
     }

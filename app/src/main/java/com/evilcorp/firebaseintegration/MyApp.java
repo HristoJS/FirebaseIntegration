@@ -7,6 +7,7 @@ import android.support.multidex.MultiDexApplication;
 
 import com.evilcorp.firebaseintegration.helper.FirebaseConnectionHelper;
 import com.evilcorp.firebaseintegration.helper.Time;
+import com.evilcorp.firebaseintegration.model.firebase.GuestAccount;
 import com.evilcorp.firebaseintegration.model.firebase.UserAccount;
 import com.evilcorp.firebaseintegration.model.firebase.UserStatus;
 import com.facebook.CallbackManager;
@@ -63,7 +64,7 @@ public class MyApp extends MultiDexApplication {
         FirebaseApp.initializeApp(getApplicationContext());
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
         setDefaultSettings();
-        Time.init();
+        Time.init(this);
     }
 
     private void initFabric(){
@@ -100,6 +101,12 @@ public class MyApp extends MultiDexApplication {
     public static UserAccount getCurrentAccount(){
         if(currentAccount == null) {
             FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+            if(user == null){
+                return null;
+            }
+            if(user.isAnonymous()){
+                return new GuestAccount();
+            }
             currentAccount = new UserAccount(user);
             FirebaseConnectionHelper.init(currentAccount);
         }

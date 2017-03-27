@@ -1,5 +1,7 @@
 package com.evilcorp.firebaseintegration.helper;
 
+import android.content.Context;
+
 import com.instacart.library.truetime.TrueTime;
 
 import java.io.IOException;
@@ -27,14 +29,19 @@ public class Time {
             TimeUnit.SECONDS.toMillis(1) );
 
     private static final List<String> TIMES_STRING = Arrays.asList("year","month","day","hour","minute","second");
+    private static final int DEFAULT_TIMEOUT = 2000;
 
-
-    public static void init(){
+    public static void init(final Context context){
         new Thread(new Runnable() {
             @Override
             public void run() {
                 try {
-                    com.instacart.library.truetime.TrueTime.build().withNtpHost("time.google.com").initialize();
+                    TrueTime.build()
+                            .withLoggingEnabled(true)
+                            .withSharedPreferences(context)
+                            .withNtpHost("time.google.com")
+                            .withConnectionTimeout(DEFAULT_TIMEOUT)
+                            .initialize();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }

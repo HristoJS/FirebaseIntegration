@@ -10,6 +10,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.evilcorp.firebaseintegration.R;
 import com.evilcorp.firebaseintegration.adapter.FriendListAdapter;
@@ -24,6 +25,8 @@ public class FriendListFragment extends BaseFragment implements FriendListContra
 
     private FriendListContract.Presenter mPresenter;
     private FriendListAdapter mAdapter;
+    private RecyclerView mRecyclerView;
+    private TextView mNofriendsTextView;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -49,11 +52,12 @@ public class FriendListFragment extends BaseFragment implements FriendListContra
     public void setupRecyclerView(List<UserAccount> users) {
         View rootView = getView();
         if (rootView != null) {
-            RecyclerView recyclerView = (RecyclerView) rootView.findViewById(R.id.user_list);
-            assert recyclerView != null;
+            mRecyclerView = (RecyclerView) rootView.findViewById(R.id.user_list);
+            mNofriendsTextView = (TextView) rootView.findViewById(R.id.nofriends_textview);
+            assert mRecyclerView != null;
             mAdapter = new FriendListAdapter(getContext(), users, this);
-            recyclerView.addItemDecoration(new DividerItemDecoration(getContext(), LinearLayoutManager.VERTICAL));
-            recyclerView.setAdapter(mAdapter);
+            mRecyclerView.addItemDecoration(new DividerItemDecoration(getContext(), LinearLayoutManager.VERTICAL));
+            mRecyclerView.setAdapter(mAdapter);
             final SwipeRefreshLayout refresh_layout = (SwipeRefreshLayout) rootView.findViewById(R.id.refresh_layout);
             refresh_layout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
                 @Override
@@ -87,6 +91,12 @@ public class FriendListFragment extends BaseFragment implements FriendListContra
     @Override
     public void onFriendClick(String targetUserId) {
         mPresenter.initChat(targetUserId);
+    }
+
+    @Override
+    public void onNoFriends(boolean foreverAlone) {
+        mRecyclerView.setVisibility(foreverAlone ? View.INVISIBLE : View.VISIBLE);
+        mNofriendsTextView.setVisibility(foreverAlone ? View.VISIBLE : View.INVISIBLE);
     }
 
     @Override

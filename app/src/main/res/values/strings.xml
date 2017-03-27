@@ -101,6 +101,7 @@
     <string name="user_status">User Status</string>
     <string name="description_expand">Expand</string>
     <string name="or">or</string>
+    <string name="nofriends_text">You have no friends. Nobody likes you.</string>
 
 
 </resources>

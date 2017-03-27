@@ -11,14 +11,14 @@ import com.google.firebase.auth.UserInfo;
 public class UserAccount implements Parcelable {
     private static final String TAG = UserAccount.class.getSimpleName();
 
-    private String email;
-    private String password;
-    private String name;
-    private String avatar;
-    private int accountType;
-    private String id;
-    private long lastOnline;
-    private int userStatus;
+    protected String email;
+    protected String password;
+    protected String name;
+    protected String avatar;
+    protected int accountType;
+    protected String id;
+    protected long lastOnline;
+    protected int userStatus;
 
     public UserAccount(){
     }
@@ -83,6 +83,15 @@ public class UserAccount implements Parcelable {
             return new UserAccount[size];
         }
     };
+
+    public UserAccount(String name, String avatar, int accountType, String id, long lastOnline, int userStatus) {
+        this.name = name;
+        this.avatar = avatar;
+        this.accountType = accountType;
+        this.id = id;
+        this.lastOnline = lastOnline;
+        this.userStatus = userStatus;
+    }
 
     @Override
     public int describeContents() {

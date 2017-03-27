@@ -40,7 +40,10 @@ public class FriendListAdapter extends RecyclerView.Adapter<FriendListAdapter.Fr
 
     @Override
     public int getItemCount() {
-        return users.size();
+        int user_size = users.size();
+        boolean foreverAlone = (user_size == 0);
+        listener.onNoFriends(foreverAlone);
+        return user_size;
     }
 
     public void addItem(UserAccount user){
@@ -89,6 +92,7 @@ public class FriendListAdapter extends RecyclerView.Adapter<FriendListAdapter.Fr
 
     public interface FriendClickListener {
         void onFriendClick(String targetUserId);
+        void onNoFriends(boolean foreverAlone);
     }
 
     class FriendListViewHolder extends RecyclerView.ViewHolder {
