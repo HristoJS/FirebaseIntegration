@@ -6,38 +6,21 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:mContext="com.evilcorp.firebaseintegration.main.MainActivity">
-    <com.evilcorp.firebaseintegration.view.ExpandablePanel
+    <android.support.design.widget.CoordinatorLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/expandablePanel"
-        app:animationDuration="200"
-        app:minHeight="35dp"
-        app:handle="@+id/handle"
-        app:content="@+id/userPanel"
-        android:orientation="vertical"
-        >
-        <include
-            layout="@layout/user_panel"
-            android:layout_marginTop="@dimen/user_panel_margin"
-            android:layout_marginStart="@dimen/user_panel_margin"
-            android:id="@id/userPanel"
-            android:layout_width="wrap_content"
-            android:layout_height="100dp"
-            />
-        <ImageButton
-            android:id="@id/handle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:srcCompat="@drawable/ic_drag_handle_black_24px"
-            android:background="@android:color/transparent"
-            android:layout_gravity="center_horizontal"/>
-        <include
-            layout="@layout/separator"
-            android:id="@+id/separator"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/bottomNavigationView" >
+    <include layout="@layout/user_toolbar"
+             android:id="@+id/user_panel"
+             android:layout_height="200dp"
+             android:layout_width="match_parent" />
+        <FrameLayout
+            android:id="@+id/fragment_placeholder"
+            android:layout_marginTop="@dimen/activity_vertical_margin"
             android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_below="@id/userPanel" />
-    </com.evilcorp.firebaseintegration.view.ExpandablePanel>
+            android:layout_height="match_parent"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+    </android.support.design.widget.CoordinatorLayout>
 
     <android.support.design.widget.BottomNavigationView
         android:layout_width="match_parent"
@@ -55,12 +38,5 @@
         app:adSize="BANNER"
         app:adUnitId="@string/banner_ad_unit_id">
     </com.google.android.gms.ads.AdView>
-    <FrameLayout
-        android:id="@+id/fragment_placeholder"
-        android:layout_marginTop="@dimen/activity_vertical_margin"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@id/expandablePanel"
-        android:layout_above="@id/bottomNavigationView">
-    </FrameLayout>
+
 </RelativeLayout>

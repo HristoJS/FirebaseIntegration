@@ -1,18 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="colorPrimary">#2196F3</color>
-    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorPrimaryDark">#1976D2</color>
     <color name="colorAccent">#F44336</color>
     <color name="black">#000000</color>
     <color name="white">#FFFFFF</color>
     <color name="grey">#607D8B</color>
 
     <color name="chat_bubble_color">@color/colorAccent</color>
-    <color name="themeColor">@color/black</color>
+    <color name="themeColor">@color/colorPrimaryDark</color>
 
     <color name="statusOfflineColor">#8f8f8f</color>
     <color name="statusOnlineColor">#23d653</color>
     <color name="statusAwayColor">#ffc000</color>
     <color name="statusBusyColor">#f1111c</color>
+
+    <array name="user_statuses_array">
+        <item>@color/statusOfflineColor</item>
+        <item>@color/statusOnlineColor</item>
+        <item>@color/statusAwayColor</item>
+        <item>@color/statusBusyColor</item>
+        <item>@color/statusOfflineColor</item>
+    </array>
+
 
 </resources>

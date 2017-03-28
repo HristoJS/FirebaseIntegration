@@ -2,13 +2,16 @@ package com.evilcorp.firebaseintegration.base;
 
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -18,6 +21,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.DrawableTypeRequest;
 import com.bumptech.glide.Glide;
 import com.evilcorp.firebaseintegration.model.firebase.AccountType;
 import com.evilcorp.firebaseintegration.view.ExpandablePanel;
@@ -115,10 +119,78 @@ public abstract class BaseActivity extends AppCompatActivity {
         Log.d(this.getLocalClassName(),message);
     }
 
-
-    protected void addUserPanel() {
+    protected void addUserPanel(){
         final UserAccount user = MyApp.getCurrentAccount();
-        ExpandablePanel userPanel = (ExpandablePanel) findViewById(R.id.expandablePanel);
+        if(user == null) {
+            return;
+        }
+        Toolbar userToolbar = (Toolbar) findViewById(R.id.userToolbar);
+        userToolbar.setTitle(user.getName());
+        setSupportActionBar(userToolbar);
+
+        ImageView userAvatar = (ImageView) findViewById(R.id.userAvatar);
+        Object avatar = user.getAvatar();
+        if (avatar != null) {
+            Glide.with(this)
+                    .load(avatar)
+                    .asBitmap()
+                    .centerCrop()
+                    .into(new RounderCornerImage(this, userAvatar));
+        }
+
+        final ImageView userStatusIcon = (ImageView) findViewById(R.id.userStatusIcon);
+        Spinner userStatusSpinner = (Spinner) findViewById(R.id.userStatusSpinner);
+        userStatusSpinner.setBackgroundColor(ContextCompat.getColor(this,R.color.colorPrimary));
+        if(user.getAccountType() == AccountType.GUEST){
+            userStatusSpinner.setVisibility(View.INVISIBLE);
+            userStatusIcon.setVisibility(View.INVISIBLE);
+            return;
+        }
+        // Create an ArrayAdapter using the string array and a default spinner layout
+        final ArrayAdapter<String> adapter = new ArrayAdapter<>(this, R.layout.user_status_item, UserStatus.getAll());
+        // Specify the layout to use when the list of choices appears
+        adapter.setDropDownViewResource(R.layout.user_status_dropdown);
+        // Apply the adapter to the spinner
+        userStatusSpinner.setAdapter(adapter);
+        userStatusSpinner.setSelection(user.getUserStatus());
+        userStatusSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
+//                int color = 0;
+//                switch(position){
+//                    case 0:
+//                        color = R.color.statusOfflineColor;
+//                        break;
+//                    case 1:
+//                        color = R.color.statusOnlineColor;
+//                        break;
+//                    case 2:
+//                        color = R.color.statusAwayColor;
+//                        break;
+//                    case 3:
+//                        color = R.color.statusBusyColor;
+//                        break;
+//                    case 4:
+//                        color = R.color.statusOfflineColor;
+//                        break;
+//                }
+
+                int[] colors = getResources().getIntArray(R.array.user_statuses_array);
+                userStatusIcon.setColorFilter(colors[position]);
+                user.setUserStatus(position);
+                FirebaseConnectionHelper.changeStatus(user, position);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+    }
+
+    protected void addUserPanel(Context context) {
+        final UserAccount user = MyApp.getCurrentAccount();
+        ExpandablePanel userPanel = new ExpandablePanel(this);// = (ExpandablePanel) findViewById(R.id.expandablePanel);
         if(user != null && userPanel != null) {
             userPanel.setOnExpandListener(new ExpandablePanel.OnExpandListener() {
                 @Override

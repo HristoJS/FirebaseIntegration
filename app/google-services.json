@@ -15,11 +15,19 @@
       },
       "oauth_client": [
         {
+          "client_id": "801251181425-4lb3gs92bvjo04phv801g052sevvehms.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.evilcorp.firebaseintegration",
+            "certificate_hash": "2a9e463f6620a8578a08384dc10d1be85f5f0753"
+          }
+        },
+        {
           "client_id": "801251181425-i6fev8c3mslcv1b1jve4ovok05tfj5uh.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.evilcorp.firebaseintegration",
-            "certificate_hash": "90DA06FC13388B662D9B6D172682EAE2AC1438CC"
+            "certificate_hash": "90da06fc13388b662d9b6d172682eae2ac1438cc"
           }
         },
         {

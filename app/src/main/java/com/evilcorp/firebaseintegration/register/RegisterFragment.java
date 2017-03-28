@@ -51,7 +51,7 @@ public class RegisterFragment extends BaseFragment implements View.OnClickListen
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_register, container, false);
-        mWelcomePictureImageView = (ImageView) root.findViewById(R.id.welcome_picture);
+        //mWelcomePictureImageView = (ImageView) root.findViewById(R.id.welcome_picture);
         mEmailEditText = (TextInputEditText) root.findViewById(R.id.email_edittext);
         mRepeatEmailEditText = (TextInputEditText) root.findViewById(R.id.repeat_email_edittext);
         mPasswordEditText = (TextInputEditText) root.findViewById(R.id.password_edittext);
@@ -142,7 +142,7 @@ public class RegisterFragment extends BaseFragment implements View.OnClickListen
             cropImage(SELECTED_IMAGE_URI);
         }
         if (view != null && SELECTED_IMAGE_URI != null) {
-            mWelcomePictureImageView.setImageURI(SELECTED_IMAGE_URI);
+            //mWelcomePictureImageView.setImageURI(SELECTED_IMAGE_URI);
         }
         super.onResume();
     }

@@ -129,21 +129,6 @@ public class LoginFragment extends BaseFragment implements LoginContract.View, V
         }
     }
 
-    public void setGooglePlusButtonText(SignInButton signInButton, String buttonText) {
-        // Search all the views inside SignInButton for TextView
-        for (int i = 0; i < signInButton.getChildCount(); i++) {
-            View v = signInButton.getChildAt(i);
-
-            // if the view is instance of TextView then change the text SignInButton
-            if (v instanceof TextView) {
-                TextView tv = (TextView) v;
-                tv.setText(buttonText);
-                return;
-            }
-        }
-    }
-
-
     @Override
     public void loginSuccess(boolean email_verified) {
         dismissProgress();
