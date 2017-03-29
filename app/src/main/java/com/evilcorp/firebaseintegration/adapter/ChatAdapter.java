@@ -1,5 +1,7 @@
 package com.evilcorp.firebaseintegration.adapter;
 
+import android.content.Context;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -10,7 +12,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.evilcorp.firebaseintegration.R;
 import com.evilcorp.firebaseintegration.chat.ChatContract;
-import com.evilcorp.firebaseintegration.helper.RounderCornerImage;
+import com.evilcorp.firebaseintegration.view.RounderCornerImage;
 import com.evilcorp.firebaseintegration.model.firebase.Message;
 import com.evilcorp.firebaseintegration.model.firebase.UserAccount;
 import com.google.firebase.database.Query;
@@ -69,11 +71,14 @@ public class ChatAdapter extends FirebaseRecyclerAdapter<Message,ChatAdapter.Mes
         UserAccount account = getUser(message.getUserId());
         ImageView avatar = viewHolder.chatAvatar;
         assert account != null;
+        Context context = chatView.getContext();
+        int color = ContextCompat.getColor(context, R.color.colorShadow);
+        RounderCornerImage image = new RounderCornerImage(context, avatar, color);
         Glide.with(chatView.getContext())
                 .load(account.getAvatar())
                 .asBitmap()
                 .centerCrop()
-                .into(new RounderCornerImage(chatView.getContext(), avatar));
+                .into(image);
     }
 
     private UserAccount getUser(final String userId) {

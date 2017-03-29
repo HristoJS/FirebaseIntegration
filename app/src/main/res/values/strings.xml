@@ -103,6 +103,9 @@
     <string name="or">or</string>
     <string name="nofriends_text">You have no friends. Nobody likes you.</string>
     <string name="logout_title">Logout</string>
+    <string name="go_back_text">Go Back</string>
+    <string name="email_title_text">Please enter your email below, so we can send you the password reset information:</string>
+    <string name="passcode_title_text">Once you received the passcode, please enter it below:</string>
 
 
 </resources>

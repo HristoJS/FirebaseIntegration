@@ -10,132 +10,147 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-
-        <android.support.design.widget.TextInputEditText
-            android:id="@+id/email_edittext"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:hint="@string/prompt_email"
-            android:textSize="15sp"
-            android:inputType="textEmailAddress"
-            android:maxLines="1"
-            tools:layout_constraintTop_creator="1"
-            tools:layout_constraintRight_creator="1"
-            android:layout_marginStart="8dp"
-            android:layout_marginEnd="8dp"
-            app:layout_constraintRight_toRightOf="parent"
-            tools:layout_constraintLeft_creator="1"
+        <android.support.v7.widget.AppCompatImageButton
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:contentDescription="@string/userAvatar"
+            android:id="@+id/add_picture_button"
+            android:background="@android:color/transparent"
+            app:srcCompat="@drawable/ic_add_a_photo_black_24px"
+            android:scaleType="centerCrop"
+            android:layout_margin="@dimen/default_margin"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toTopOf="parent"/>
 
-
-        <android.support.design.widget.TextInputEditText
-            android:id="@+id/repeat_email_edittext"
+        <android.support.design.widget.TextInputLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:hint="@string/prompt_repeat_email"
-            android:textSize="15sp"
-            android:inputType="textEmailAddress"
-            android:maxLines="1"
-            tools:layout_constraintTop_creator="1"
-            tools:layout_constraintRight_creator="1"
-            app:layout_constraintRight_toRightOf="@+id/email_edittext"
-            app:layout_constraintTop_toBottomOf="@+id/email_edittext"
-            tools:layout_constraintLeft_creator="1"
-            app:layout_constraintLeft_toLeftOf="@+id/email_edittext"/>
+            android:id="@+id/name_inputlayout"
+            android:layout_margin="@dimen/default_margin"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintLeft_toRightOf="@+id/add_picture_button">
 
+            <android.support.design.widget.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/name_edittext"
+                android:hint="@string/prompt_name"
+                android:textSize="15sp"
+                android:inputType="textEmailAddress"
+                android:maxLines="1"/>
+        </android.support.design.widget.TextInputLayout>
 
-        <android.support.design.widget.TextInputEditText
-            android:id="@+id/password_edittext"
+        <android.support.design.widget.TextInputLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:hint="@string/prompt_password"
-            android:textSize="15sp"
-            android:imeOptions="actionUnspecified"
-            android:inputType="textPassword"
-            android:maxLines="1"
-            tools:layout_constraintTop_creator="1"
-            tools:layout_constraintRight_creator="1"
-            app:layout_constraintRight_toRightOf="@+id/repeat_email_edittext"
-            app:layout_constraintTop_toBottomOf="@+id/repeat_email_edittext"
-            tools:layout_constraintLeft_creator="1"
-            app:layout_constraintLeft_toLeftOf="@+id/repeat_email_edittext"/>
+            android:id="@+id/country_inputlayout"
+            app:layout_constraintTop_toBottomOf="@+id/name_inputlayout"
+            android:layout_margin="@dimen/default_margin"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintLeft_toRightOf="@+id/add_picture_button">
 
+            <android.support.design.widget.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/country_edittext"
+                android:hint="@string/prompt_country"
+                android:textSize="15sp"
+                android:inputType="textEmailAddress"
+                android:maxLines="1"/>
+        </android.support.design.widget.TextInputLayout>
 
-        <android.support.design.widget.TextInputEditText
-            android:id="@+id/repeat_password_edittext"
+        <android.support.design.widget.TextInputLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:hint="@string/prompt_repeat_password"
-            android:imeActionId="@+id/login"
-            android:textSize="15sp"
-            android:imeOptions="actionUnspecified"
-            android:inputType="textPassword"
-            android:maxLines="1"
-            tools:layout_constraintTop_creator="1"
-            tools:layout_constraintRight_creator="1"
-            app:layout_constraintRight_toRightOf="@+id/password_edittext"
-            app:layout_constraintTop_toBottomOf="@+id/password_edittext"
-            tools:layout_constraintLeft_creator="1"
-            app:layout_constraintLeft_toLeftOf="@+id/password_edittext"/>
+            android:id="@+id/email_inputlayout"
+            android:layout_margin="@dimen/default_margin"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/country_inputlayout">
 
+            <android.support.design.widget.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/email_edittext"
+                android:hint="@string/prompt_email"
+                android:textSize="15sp"
+                android:inputType="textEmailAddress"
+                android:maxLines="1"/>
+        </android.support.design.widget.TextInputLayout>
 
-        <android.support.design.widget.TextInputEditText
-            android:id="@+id/name_edittext"
+        <android.support.design.widget.TextInputLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:hint="@string/prompt_name"
-            android:textSize="15sp"
-            android:inputType="textEmailAddress"
-            android:maxLines="1"
-            tools:layout_constraintTop_creator="1"
-            tools:layout_constraintRight_creator="1"
-            app:layout_constraintRight_toRightOf="@+id/repeat_password_edittext"
-            app:layout_constraintTop_toBottomOf="@+id/repeat_password_edittext"
-            tools:layout_constraintLeft_creator="1"
-            app:layout_constraintLeft_toLeftOf="@+id/repeat_password_edittext"/>
+            android:id="@+id/repeat_email_inputlayout"
+            app:layout_constraintTop_toBottomOf="@+id/email_inputlayout"
+            android:layout_margin="@dimen/default_margin"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent">
 
+            <android.support.design.widget.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/repeat_email_edittext"
+                android:hint="@string/prompt_repeat_email"
+                android:textSize="15sp"
+                android:inputType="textEmailAddress"
+                android:maxLines="1"/>
+        </android.support.design.widget.TextInputLayout>
 
-        <android.support.design.widget.TextInputEditText
-            android:id="@+id/country_edittext"
+        <android.support.design.widget.TextInputLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:hint="@string/prompt_country"
-            android:textSize="15sp"
-            android:inputType="textEmailAddress"
-            android:maxLines="1"
-            tools:layout_constraintTop_creator="1"
-            tools:layout_constraintRight_creator="1"
-            app:layout_constraintRight_toRightOf="@+id/name_edittext"
-            app:layout_constraintTop_toBottomOf="@+id/name_edittext"
-            tools:layout_constraintLeft_creator="1"
-            app:layout_constraintLeft_toLeftOf="@+id/name_edittext"/>
+            android:id="@+id/password_inputlayout"
+            android:layout_margin="@dimen/default_margin"
+            app:layout_constraintTop_toBottomOf="@+id/repeat_email_inputlayout"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent">
 
+            <android.support.design.widget.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/password_edittext"
+                android:hint="@string/prompt_password"
+                android:textSize="15sp"
+                android:imeOptions="actionUnspecified"
+                android:inputType="textPassword"
+                android:maxLines="1"/>
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/default_margin"
+            android:id="@+id/repeat_password_inputlayout"
+            app:layout_constraintTop_toBottomOf="@+id/password_inputlayout"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent">
+
+            <android.support.design.widget.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/repeat_password_edittext"
+                android:hint="@string/prompt_repeat_password"
+                android:imeActionId="@+id/login"
+                android:textSize="15sp"
+                android:imeOptions="actionUnspecified"
+                android:inputType="textPassword"
+                android:maxLines="1"/>
+        </android.support.design.widget.TextInputLayout>
 
         <android.support.v7.widget.AppCompatButton
-            android:id="@+id/add_picture_button"
+            android:id="@+id/go_back_button"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="@string/add_picture_button"
+            android:text="@string/go_back_text"
             android:background="@color/colorPrimary"
             android:textColor="@color/white"
-            app:layout_constraintTop_toBottomOf="@+id/country_edittext"
+            android:textStyle="bold"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toLeftOf="@+id/fragment_register_button"
-            android:layout_margin="@dimen/default_margin"/>
-
-        <!--<ImageView-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:contentDescription="@string/userAvatar"-->
-            <!--android:id="@+id/welcome_picture"-->
-            <!--tools:layout_conversion_absoluteX="0dp"-->
-            <!--tools:layout_conversion_absoluteY="315dp"-->
-            <!--tools:layout_conversion_absoluteWidth="0dp"-->
-            <!--tools:layout_conversion_absoluteHeight="0dp"-->
-            <!--tools:layout_editor_absoluteY="315dp"-->
-            <!--tools:layout_editor_absoluteX="0dp"/>-->
-
+            android:layout_margin="@dimen/default_margin"
+            app:layout_constraintTop_toBottomOf="@+id/repeat_password_inputlayout"
+            app:layout_constraintRight_toLeftOf="@+id/fragment_register_button"/>
 
         <android.support.v7.widget.AppCompatButton
             android:id="@+id/fragment_register_button"
@@ -147,9 +162,9 @@
             android:textColor="@color/white"
             android:textSize="15sp"
             android:textStyle="bold"
-            app:layout_constraintLeft_toRightOf="@+id/add_picture_button"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/country_edittext"
-            android:layout_margin="@dimen/default_margin"/>
+            android:layout_margin="@dimen/default_margin"
+            app:layout_constraintTop_toBottomOf="@+id/repeat_password_inputlayout"
+            app:layout_constraintLeft_toRightOf="@+id/go_back_button"/>
     </android.support.constraint.ConstraintLayout>
 </ScrollView>

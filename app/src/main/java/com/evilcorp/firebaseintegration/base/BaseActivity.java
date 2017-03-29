@@ -4,7 +4,6 @@ package com.evilcorp.firebaseintegration.base;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -21,14 +20,13 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bumptech.glide.DrawableTypeRequest;
 import com.bumptech.glide.Glide;
 import com.evilcorp.firebaseintegration.model.firebase.AccountType;
 import com.evilcorp.firebaseintegration.view.ExpandablePanel;
 import com.evilcorp.firebaseintegration.MyApp;
 import com.evilcorp.firebaseintegration.R;
 import com.evilcorp.firebaseintegration.helper.FirebaseConnectionHelper;
-import com.evilcorp.firebaseintegration.helper.RounderCornerImage;
+import com.evilcorp.firebaseintegration.view.RounderCornerImage;
 import com.evilcorp.firebaseintegration.model.firebase.UserAccount;
 import com.evilcorp.firebaseintegration.model.firebase.UserStatus;
 
@@ -131,11 +129,13 @@ public abstract class BaseActivity extends AppCompatActivity {
         ImageView userAvatar = (ImageView) findViewById(R.id.userAvatar);
         Object avatar = user.getAvatar();
         if (avatar != null) {
+            int color = ContextCompat.getColor(this, R.color.colorPrimaryDark);
+            RounderCornerImage image = new RounderCornerImage(this, userAvatar, color);
             Glide.with(this)
                     .load(avatar)
                     .asBitmap()
                     .centerCrop()
-                    .into(new RounderCornerImage(this, userAvatar));
+                    .into(image);
         }
 
         final ImageView userStatusIcon = (ImageView) findViewById(R.id.userStatusIcon);
@@ -147,7 +147,7 @@ public abstract class BaseActivity extends AppCompatActivity {
             return;
         }
         // Create an ArrayAdapter using the string array and a default spinner layout
-        final ArrayAdapter<String> adapter = new ArrayAdapter<>(this, R.layout.user_status_item, UserStatus.getAll());
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, R.layout.user_status_item, UserStatus.getAll());
         // Specify the layout to use when the list of choices appears
         adapter.setDropDownViewResource(R.layout.user_status_dropdown);
         // Apply the adapter to the spinner
@@ -186,85 +186,6 @@ public abstract class BaseActivity extends AppCompatActivity {
 
             }
         });
-    }
-
-    protected void addUserPanel(Context context) {
-        final UserAccount user = MyApp.getCurrentAccount();
-        ExpandablePanel userPanel = new ExpandablePanel(this);// = (ExpandablePanel) findViewById(R.id.expandablePanel);
-        if(user != null && userPanel != null) {
-            userPanel.setOnExpandListener(new ExpandablePanel.OnExpandListener() {
-                @Override
-                public void onExpand(View handle, View content) {
-                    Log("Expand");
-                }
-
-                @Override
-                public void onCollapse(View handle, View content) {
-                    Log("Collapse");
-                }
-            });
-            ImageView userAvatar = (ImageView) findViewById(R.id.userAvatar);
-            String avatar = user.getAvatar();
-            if(avatar != null) {
-                Glide.with(this)
-                        .load(user.getAvatar())
-                        .asBitmap()
-                        .centerCrop()
-                        .into(new RounderCornerImage(this, userAvatar));
-            }
-            TextView userName = (TextView) findViewById(R.id.userName);
-            userName.setText(user.getName());
-
-            TextView userEmail = (TextView) findViewById(R.id.userEmail);
-            userEmail.setText(user.getEmail());
-
-            final ImageView userStatusIcon = (ImageView) findViewById(R.id.userStatusIcon);
-
-            Spinner userStatusSpinner = (Spinner) findViewById(R.id.userStatusSpinner);
-            if(user.getAccountType() == AccountType.GUEST){
-                userStatusSpinner.setVisibility(View.INVISIBLE);
-                userStatusIcon.setVisibility(View.INVISIBLE);
-                return;
-            }
-            // Create an ArrayAdapter using the string array and a default spinner layout
-            ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item,UserStatus.getAll());
-            // Specify the layout to use when the list of choices appears
-            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-            // Apply the adapter to the spinner
-            userStatusSpinner.setAdapter(adapter);
-            userStatusSpinner.setSelection(user.getUserStatus());
-            userStatusSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                @Override
-                public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
-                    int color = 0;
-                    switch(position){
-                        case 0:
-                            color = R.color.statusOfflineColor;
-                            break;
-                        case 1:
-                            color = R.color.statusOnlineColor;
-                            break;
-                        case 2:
-                            color = R.color.statusAwayColor;
-                            break;
-                        case 3:
-                            color = R.color.statusBusyColor;
-                            break;
-                        case 4:
-                            color = R.color.statusOfflineColor;
-                            break;
-                    }
-                    userStatusIcon.setColorFilter(ContextCompat.getColor(BaseActivity.this,color));
-                    user.setUserStatus(position);
-                    FirebaseConnectionHelper.changeStatus(user, position);
-                }
-
-                @Override
-                public void onNothingSelected(AdapterView<?> adapterView) {
-
-                }
-            });
-        }
     }
 
     public void loadFragment(Fragment fragment, boolean backstackEnabled){

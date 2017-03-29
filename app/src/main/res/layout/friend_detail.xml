@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="horizontal">
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
     <ImageView
         android:layout_width="36dp"
         android:layout_height="36dp"
         android:id="@+id/friendAvatar"
-        android:src="@drawable/com_facebook_tooltip_black_background"
+        app:srcCompat="@drawable/ic_person_black_24px"
         android:layout_margin="10dp"
         android:contentDescription="@string/content_avatar" />
     <TextView

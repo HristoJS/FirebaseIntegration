@@ -1,4 +1,4 @@
-package com.evilcorp.firebaseintegration.helper;
+package com.evilcorp.firebaseintegration.view;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -7,6 +7,7 @@ import android.graphics.Paint;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
+import android.support.v4.view.ViewCompat;
 import android.widget.ImageView;
 
 import com.bumptech.glide.request.target.BitmapImageViewTarget;
@@ -23,11 +24,12 @@ public class RounderCornerImage extends BitmapImageViewTarget {
     private Context mContext;
     private int mBorderColor;
 
-    public RounderCornerImage(Context context, ImageView view) {
+    public RounderCornerImage(Context context, ImageView view, int bolderColor) {
         super(view);
         this.mImageView = view;
         this.mContext = context;
-        mBorderColor = ContextCompat.getColor(mContext, R.color.black);
+        mBorderColor = bolderColor;
+        //ContextCompat.getColor(mContext, R.color.colorPrimaryDark);
     }
 
     @Override

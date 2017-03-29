@@ -3,12 +3,13 @@
     <color name="colorPrimary">#2196F3</color>
     <color name="colorPrimaryDark">#1976D2</color>
     <color name="colorAccent">#F44336</color>
+    <color name="colorShadow">@color/grey</color>
     <color name="black">#000000</color>
     <color name="white">#FFFFFF</color>
     <color name="grey">#607D8B</color>
 
     <color name="chat_bubble_color">@color/colorAccent</color>
-    <color name="themeColor">@color/colorPrimaryDark</color>
+    <color name="themeColor">@color/black</color>
 
     <color name="statusOfflineColor">#8f8f8f</color>
     <color name="statusOnlineColor">#23d653</color>

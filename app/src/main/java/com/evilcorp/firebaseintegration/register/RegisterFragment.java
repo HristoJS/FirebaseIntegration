@@ -7,6 +7,9 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.TextInputEditText;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.AppCompatButton;
+import android.support.v7.widget.AppCompatImageButton;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,10 +17,12 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 
+import com.bumptech.glide.Glide;
 import com.evilcorp.firebaseintegration.R;
 import com.evilcorp.firebaseintegration.base.BaseFragment;
 import com.evilcorp.firebaseintegration.helper.NetworkHelper;
 import com.evilcorp.firebaseintegration.login.LoginActivity;
+import com.evilcorp.firebaseintegration.view.RounderCornerImage;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 
@@ -40,6 +45,7 @@ public class RegisterFragment extends BaseFragment implements View.OnClickListen
     private TextInputEditText mRepeatPasswordEditText;
     private TextInputEditText mNameEditText;
     private TextInputEditText mCountryEditText;
+    private AppCompatImageButton mAddImageButton;
 
     private boolean mImageSelected = false;
 
@@ -59,10 +65,12 @@ public class RegisterFragment extends BaseFragment implements View.OnClickListen
         mNameEditText = (TextInputEditText) root.findViewById(R.id.name_edittext);
         mCountryEditText = (TextInputEditText) root.findViewById(R.id.country_edittext);
 
-        Button add_picture_button = (Button) root.findViewById(R.id.add_picture_button);
-        add_picture_button.setOnClickListener(this);
-        Button fragment_register_button = (Button) root.findViewById(R.id.fragment_register_button);
-        fragment_register_button.setOnClickListener(this);
+        mAddImageButton = (AppCompatImageButton) root.findViewById(R.id.add_picture_button);
+        mAddImageButton.setOnClickListener(this);
+        Button goBackButton = (AppCompatButton) root.findViewById(R.id.go_back_button);
+        goBackButton.setOnClickListener(this);
+        Button fragmentRegisterButton = (Button) root.findViewById(R.id.fragment_register_button);
+        fragmentRegisterButton.setOnClickListener(this);
 
         mPresenter = new RegisterPresenter(this);
         return root;
@@ -95,6 +103,8 @@ public class RegisterFragment extends BaseFragment implements View.OnClickListen
             case R.id.fragment_register_button:
                 register();
                 break;
+            case R.id.go_back_button:
+                getActivity().onBackPressed();
             default:
                 break;
         }
@@ -142,7 +152,14 @@ public class RegisterFragment extends BaseFragment implements View.OnClickListen
             cropImage(SELECTED_IMAGE_URI);
         }
         if (view != null && SELECTED_IMAGE_URI != null) {
-            //mWelcomePictureImageView.setImageURI(SELECTED_IMAGE_URI);
+            int color = ContextCompat.getColor(getContext(), R.color.colorPrimaryDark);
+            RounderCornerImage image = new RounderCornerImage(getContext(), mAddImageButton, color);
+            Glide.with(this)
+                    .load(SELECTED_IMAGE_URI)
+                    .asBitmap()
+                    .centerCrop()
+                    .into(image);
+            //mAddImageButton.setImageURI(SELECTED_IMAGE_URI);
         }
         super.onResume();
     }

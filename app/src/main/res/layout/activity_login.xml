@@ -64,7 +64,7 @@
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_margin="@dimen/login_panel_margin"
+        android:layout_margin="@dimen/default_margin_x2"
         android:id="@+id/fragment_placeholder"
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
