@@ -10,7 +10,7 @@ public interface LoginContract {
 
     interface View {
 
-        void loginSuccess(boolean email_verified);
+        void loginSuccess();
 
         void loginFail(String reason);
 

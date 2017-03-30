@@ -17,7 +17,6 @@
         android:layout_margin="@dimen/button_margin"
         android:background="@drawable/ic_send_black_24px"
         android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"/>
     <EditText
         android:layout_width="match_parent"
@@ -26,7 +25,6 @@
         android:hint="@string/message_hint"
         android:inputType="textShortMessage|textAutoCorrect|textCapSentences|textMultiLine"
         android:imeOptions="actionSend|flagNoEnterAction"
-        android:layout_toLeftOf="@id/sendButton"
         android:layout_toStartOf="@id/sendButton"
         android:layout_alignParentBottom="true"/>
 

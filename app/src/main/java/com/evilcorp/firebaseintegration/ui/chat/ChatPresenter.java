@@ -8,8 +8,8 @@ import java.util.List;
 
 
 class ChatPresenter implements ChatContract.Presenter, ChatInteractor.ChatStatusListener {
-    private ChatContract.View mChatView;
-    private ChatInteractor mChatInteractor;
+    private final ChatContract.View mChatView;
+    private final ChatInteractor mChatInteractor;
 
     ChatPresenter(ChatContract.View view, String chatId, String userId) {
         this.mChatView = view;
@@ -51,10 +51,5 @@ class ChatPresenter implements ChatContract.Presenter, ChatInteractor.ChatStatus
     public void initComplete(List<UserAccount> chatParticipants, String targetUserName) {
         mChatView.setupRecyclerView(chatParticipants);
         mChatView.setupToolbar(targetUserName);
-    }
-
-    @Override
-    public void initFailed() {
-
     }
 }

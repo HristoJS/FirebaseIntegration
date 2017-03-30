@@ -28,10 +28,10 @@ import java.util.Locale;
  */
 
 public class ChatAdapter extends FirebaseRecyclerAdapter<Message,ChatAdapter.MessageViewHolder> {
-    private ChatContract.View chatView;
-    private static int ALIGN_START = 0;
-    private static int ALIGN_END = 1;
-    private List<UserAccount> chatParticipants;
+    private final ChatContract.View chatView;
+    private static final int ALIGN_START = 0;
+    private static final int ALIGN_END = 1;
+    private final List<UserAccount> chatParticipants;
 
     @SuppressWarnings("unchecked")
     public ChatAdapter(ChatContract.View view, Query ref, List<UserAccount> chatParticipants) {
@@ -92,10 +92,10 @@ public class ChatAdapter extends FirebaseRecyclerAdapter<Message,ChatAdapter.Mes
 
     //Needs to be public static in order for adapter to work
     public static class MessageViewHolder extends RecyclerView.ViewHolder {
-        TextView chatDate;
-        AppCompatTextView chatMessage;
-        ImageView chatAvatar;
-        View mView;
+        final TextView chatDate;
+        final AppCompatTextView chatMessage;
+        final ImageView chatAvatar;
+        final View mView;
 
         public MessageViewHolder(View itemView) {
             super(itemView);

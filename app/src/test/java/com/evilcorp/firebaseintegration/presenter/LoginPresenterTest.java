@@ -73,7 +73,7 @@ public class LoginPresenterTest {
     @Test
     public void testSuccess() {
         mLoginPresenter.success(null);
-        verify(loginView).loginSuccess(true);
+        verify(loginView).loginSuccess();
     }
 
     @Test

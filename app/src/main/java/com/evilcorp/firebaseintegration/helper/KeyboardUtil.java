@@ -1,9 +1,5 @@
 package com.evilcorp.firebaseintegration.helper;
 
-/**
- * Created by hristo.stoyanov on 3/27/2017.
- */
-
 import android.app.Activity;
 import android.graphics.Rect;
 import android.os.Build;
@@ -11,9 +7,13 @@ import android.view.View;
 import android.view.ViewTreeObserver;
 import android.view.inputmethod.InputMethodManager;
 
+/**
+ * Created by hristo.stoyanov on 3/27/2017.
+ */
+
 public class KeyboardUtil {
-    private View decorView;
-    private View contentView;
+    private final View decorView;
+    private final View contentView;
 
     public KeyboardUtil(Activity act, View contentView) {
         this.decorView = act.getWindow().getDecorView();
@@ -39,7 +39,7 @@ public class KeyboardUtil {
 
 
     //a small helper to allow showing the editText focus
-    ViewTreeObserver.OnGlobalLayoutListener onGlobalLayoutListener = new ViewTreeObserver.OnGlobalLayoutListener() {
+    final ViewTreeObserver.OnGlobalLayoutListener onGlobalLayoutListener = new ViewTreeObserver.OnGlobalLayoutListener() {
         @Override
         public void onGlobalLayout() {
             Rect r = new Rect();

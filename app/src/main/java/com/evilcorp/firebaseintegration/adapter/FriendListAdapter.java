@@ -23,8 +23,8 @@ import java.util.List;
  */
 
 public class FriendListAdapter extends RecyclerView.Adapter<FriendListAdapter.FriendListViewHolder> {
-    private List<UserAccount> users;
-    private Context context;
+    private final List<UserAccount> users;
+    private final Context context;
     private FriendClickListener listener = null;
 
     public FriendListAdapter(Context context, List<UserAccount> users, FriendClickListener listener) {
@@ -92,10 +92,10 @@ public class FriendListAdapter extends RecyclerView.Adapter<FriendListAdapter.Fr
     }
 
     class FriendListViewHolder extends RecyclerView.ViewHolder {
-        TextView userName;
-        ImageView userAvatar;
-        TextView lastOnline;
-        View mView;
+        final TextView userName;
+        final ImageView userAvatar;
+        final TextView lastOnline;
+        final View mView;
 
         FriendListViewHolder(View itemView) {
             super(itemView);

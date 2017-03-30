@@ -8,7 +8,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 public class LoginPresenter implements LoginContract.Presenter, FirebaseCallback<Void> {
     private static final String TAG = LoginPresenter.class.getSimpleName();
 
-    private LoginContract.View mLoginView;
+    private final LoginContract.View mLoginView;
     private LoginInteractor mLoginInteractor;
 
     public LoginPresenter(LoginContract.View view, LoginInteractor loginInteractor) {
@@ -88,7 +88,7 @@ public class LoginPresenter implements LoginContract.Presenter, FirebaseCallback
 
     @Override
     public void success(Void v) {
-        mLoginView.loginSuccess(true);
+        mLoginView.loginSuccess();
     }
 
     @Override

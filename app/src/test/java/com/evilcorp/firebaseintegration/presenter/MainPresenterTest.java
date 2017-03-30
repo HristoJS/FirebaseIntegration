@@ -19,7 +19,8 @@ import static org.mockito.Mockito.verify;
  * Created by hristo.stoyanov on 24-Feb-17.
  */
 public class MainPresenterTest {
-    MainPresenter mMainPresenter;
+    private MainPresenter mMainPresenter;
+
     @Mock
     MainContract.View mainView;
 

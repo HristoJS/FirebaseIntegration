@@ -22,7 +22,7 @@ class RegisterInteractor extends FirebaseInteractor implements RegisterContract.
     private FirebaseUser mFirebaseUser;
     private FirebaseCallback<Void> mFirebaseCallback;
 
-    private OnFailureListener mFailureListener;
+    private final OnFailureListener mFailureListener;
     private OnSuccessListener mSuccessListener;
 
 

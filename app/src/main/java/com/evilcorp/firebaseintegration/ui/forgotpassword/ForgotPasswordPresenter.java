@@ -3,8 +3,8 @@ package com.evilcorp.firebaseintegration.ui.forgotpassword;
 import com.evilcorp.firebaseintegration.data.firebase.FirebaseCallback;
 
 class ForgotPasswordPresenter implements ForgotPasswordContract.Presenter {
-    private ForgotPasswordContract.View mForgotPasswordView;
-    private ForgotPasswordInteractor mForgotPasswordInteractor;
+    private final ForgotPasswordContract.View mForgotPasswordView;
+    private final ForgotPasswordInteractor mForgotPasswordInteractor;
 
     ForgotPasswordPresenter(ForgotPasswordContract.View view, ForgotPasswordInteractor interactor) {
         mForgotPasswordView = view;
@@ -32,7 +32,7 @@ class ForgotPasswordPresenter implements ForgotPasswordContract.Presenter {
     }
 
     private boolean isEmpty(String string) {
-        return string.matches("") && string.trim().equals("null");
+        return string.equals("");
     }
 
     @Override

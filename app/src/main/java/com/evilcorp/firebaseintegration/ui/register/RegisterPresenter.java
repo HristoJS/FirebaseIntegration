@@ -9,8 +9,8 @@ import com.evilcorp.firebaseintegration.data.firebase.model.UserAccount;
 
 public class RegisterPresenter implements RegisterContract.Presenter, FirebaseCallback<Void> {
 
-    private RegisterContract.View mRegisterView;
-    private RegisterInteractor mRegisterInteractor;
+    private final RegisterContract.View mRegisterView;
+    private final RegisterInteractor mRegisterInteractor;
 
     public RegisterPresenter(RegisterContract.View view, RegisterInteractor interactor) {
         this.mRegisterView = view;

@@ -32,11 +32,6 @@ public abstract class BaseActivity extends AppCompatActivity {
     private AlertDialog mAlertDialog;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
-
-    @Override
     protected void onPause() {
         super.onPause();
         FirebaseConnection.goOffline();
@@ -116,9 +111,6 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     protected void addUserPanel(){
         final UserAccount user = ChatterinoApp.getCurrentAccount();
-        if(user == null) {
-            return;
-        }
         Toolbar userToolbar = (Toolbar) findViewById(R.id.userToolbar);
         userToolbar.setTitle(user.getName());
         setSupportActionBar(userToolbar);

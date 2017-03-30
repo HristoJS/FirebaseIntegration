@@ -257,17 +257,14 @@ public class ExpandablePanel extends LinearLayout {
 
     public interface OnExpandListener {
 
-        public void onExpand(View handle, View content);
-        public void onCollapse(View handle, View content);
+        void onExpand(View handle, View content);
+
+        void onCollapse(View handle, View content);
 
     }
 
     private class ScaleListener
             extends ScaleGestureDetector.SimpleOnScaleGestureListener {
-        @Override
-        public boolean onScaleBegin(ScaleGestureDetector detector) {
-            return super.onScaleBegin(detector);
-        }
 
         @Override
         public boolean onScale(ScaleGestureDetector detector) {
@@ -279,11 +276,6 @@ public class ExpandablePanel extends LinearLayout {
 
             invalidate();
             return true;
-        }
-
-        @Override
-        public void onScaleEnd(ScaleGestureDetector detector) {
-            super.onScaleEnd(detector);
         }
     }
 }

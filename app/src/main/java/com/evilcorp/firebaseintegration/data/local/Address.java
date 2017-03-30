@@ -1,4 +1,4 @@
-package com.evilcorp.firebaseintegration.data.local.local;
+package com.evilcorp.firebaseintegration.data.local;
 
 /**
  * Created by hristo.stoyanov on 01-Feb-17.

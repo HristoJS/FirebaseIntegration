@@ -9,8 +9,8 @@ import com.evilcorp.firebaseintegration.data.firebase.model.AccountType;
 
 public class MainPresenter implements MainContract.Presenter {
     private static final String TAG = MainPresenter.class.getSimpleName();
-    private MainContract.View mainView;
-    private MainContract.Interactor mMainInteractor;
+    private final MainContract.View mainView;
+    private final MainContract.Interactor mMainInteractor;
 
     public MainPresenter(MainContract.View view, MainContract.Interactor interactor) {
         this.mainView = view;

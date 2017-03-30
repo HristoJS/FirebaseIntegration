@@ -123,8 +123,4 @@ public class ChatterinoApp extends MultiDexApplication {
         currentAccount = null;
     }
 
-    @Override
-    public void onTerminate() {
-        super.onTerminate();
-    }
 }

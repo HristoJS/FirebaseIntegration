@@ -1,9 +1,14 @@
 package com.evilcorp.firebaseintegration.data.firebase;
 
+import android.os.Bundle;
+
 import com.evilcorp.firebaseintegration.BuildConfig;
+import com.evilcorp.firebaseintegration.ChatterinoApp;
 import com.evilcorp.firebaseintegration.R;
-import com.google.android.gms.tasks.OnSuccessListener;
+import com.evilcorp.firebaseintegration.data.firebase.model.Event;
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -21,15 +26,15 @@ public abstract class FirebaseInteractor {
     private static final String MESSAGES = "messages";
     private static final String CHATS = "chats";
 
-    private DatabaseReference mDatabase;
+    private final DatabaseReference mDatabase;
 
     protected DatabaseReference mChatsTable;
-    protected DatabaseReference mMessagesTable;
+    protected final DatabaseReference mMessagesTable;
     protected DatabaseReference mUsersTable;
 
-    protected FirebaseRemoteConfig mFirebaseRemoteConfig;
-    protected FirebaseStorage mFirebaseStorage;
-    protected FirebaseAuth mFirebaseAuth;
+    protected final FirebaseRemoteConfig mFirebaseRemoteConfig;
+    protected final FirebaseStorage mFirebaseStorage;
+    protected final FirebaseAuth mFirebaseAuth;
 
     protected FirebaseInteractor() {
         mDatabase = FirebaseDatabase.getInstance().getReference();
@@ -60,6 +65,24 @@ public abstract class FirebaseInteractor {
     protected void destroyListener(ValueEventListener listener) {
         if (listener != null) {
             mUsersTable.removeEventListener(listener);
+        }
+    }
+
+
+    protected void logEvent(int event) {
+        switch (event) {
+            case Event.LOGIN:
+                FirebaseUser user = mFirebaseAuth.getCurrentUser();
+                if (user != null) {
+                    Bundle bundle = new Bundle();
+                    bundle.putString("USERNAME", user.getDisplayName());
+                    bundle.putString("EMAIL", user.getEmail());
+                    bundle.putString("PROVIDER", user.getProviderId());
+                    ChatterinoApp.getFirebaseAnalytics().logEvent(FirebaseAnalytics.Event.LOGIN, bundle);
+                }
+                break;
+            default:
+                break;
         }
     }
 }

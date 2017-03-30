@@ -3,12 +3,9 @@ package com.evilcorp.firebaseintegration.view;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.os.SystemClock;
-import android.util.Log;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.TextView;
-import android.view.ViewGroup;
 import android.view.View.OnTouchListener;
 import android.widget.LinearLayout;
 
@@ -16,13 +13,13 @@ import com.evilcorp.firebaseintegration.R;
 
 public class SplitView extends LinearLayout implements OnTouchListener {
 
-    private int mHandleId;
+    private final int mHandleId;
     private View mHandle;
 
-    private int mPrimaryContentId;
+    private final int mPrimaryContentId;
     private View mPrimaryContent;
 
-    private int mSecondaryContentId;
+    private final int mSecondaryContentId;
     private View mSecondaryContent;
 
     private int mLastPrimaryContentSize;
@@ -215,23 +212,15 @@ public class SplitView extends LinearLayout implements OnTouchListener {
     }
 
     public boolean isPrimaryContentMaximized() {
-        if ((getOrientation() == VERTICAL && (mSecondaryContent.getMeasuredHeight() < MAXIMIZED_VIEW_TOLERANCE_DIP)) ||
-                (getOrientation() == HORIZONTAL && (mSecondaryContent.getMeasuredWidth() < MAXIMIZED_VIEW_TOLERANCE_DIP))) {
-            return true;
-        } else {
-            return false;
-        }
+        return (getOrientation() == VERTICAL && (mSecondaryContent.getMeasuredHeight() < MAXIMIZED_VIEW_TOLERANCE_DIP)) ||
+                (getOrientation() == HORIZONTAL && (mSecondaryContent.getMeasuredWidth() < MAXIMIZED_VIEW_TOLERANCE_DIP));
 
     }
 
 
     public boolean isSecondaryContentMaximized() {
-        if ((getOrientation() == VERTICAL && (mPrimaryContent.getMeasuredHeight() < MAXIMIZED_VIEW_TOLERANCE_DIP)) ||
-                (getOrientation() == HORIZONTAL && (mPrimaryContent.getMeasuredWidth() < MAXIMIZED_VIEW_TOLERANCE_DIP))) {
-            return true;
-        } else {
-            return false;
-        }
+        return (getOrientation() == VERTICAL && (mPrimaryContent.getMeasuredHeight() < MAXIMIZED_VIEW_TOLERANCE_DIP)) ||
+                (getOrientation() == HORIZONTAL && (mPrimaryContent.getMeasuredWidth() < MAXIMIZED_VIEW_TOLERANCE_DIP));
     }
 
     public void maximizePrimaryContent() {

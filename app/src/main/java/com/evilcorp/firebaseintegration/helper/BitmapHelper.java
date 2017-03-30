@@ -1,9 +1,5 @@
 package com.evilcorp.firebaseintegration.helper;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.provider.MediaStore;
-
 import java.io.ByteArrayOutputStream;
 
 /**

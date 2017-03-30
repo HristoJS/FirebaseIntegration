@@ -12,7 +12,6 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.evilcorp.firebaseintegration.R;
-import com.evilcorp.firebaseintegration.helper.NetworkInfoHelper;
 import com.evilcorp.firebaseintegration.ui.base.BaseActivity;
 import com.evilcorp.firebaseintegration.ui.friendlist.FriendListFragment;
 import com.evilcorp.firebaseintegration.ui.login.LoginActivity;

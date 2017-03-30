@@ -25,23 +25,22 @@ import java.util.List;
 
 class ChatInteractor extends FirebaseInteractor {
     private static final String TAG = ChatInteractor.class.getSimpleName();
-    private DatabaseReference mCurrentChat;
-    private DatabaseReference mCurrentChatMessages;
-    private String mChatId;
-    private List<UserAccount> mChatParticipants;
+    private static final String TITLE = "title";
+    private final DatabaseReference mCurrentChat;
+    private final DatabaseReference mCurrentChatMessages;
+    private final List<UserAccount> mChatParticipants;
     private ChatListener mChatListener;
     private UserListener mUserListener;
-    private ChatStatusListener mChatStatusListener;
-    private String mTargetUserId;
+    private final ChatStatusListener mChatStatusListener;
+    private final String mTargetUserId;
 
     interface ChatStatusListener {
+
         void initComplete(List<UserAccount> chatParticipants, String targetUserName);
 
-        void initFailed();
     }
 
     ChatInteractor(String chatId, String userId, ChatStatusListener listener) {
-        this.mChatId = chatId;
         this.mChatStatusListener = listener;
         this.mTargetUserId = userId;
 
@@ -75,7 +74,7 @@ class ChatInteractor extends FirebaseInteractor {
     }
 
     void changeTitle(String new_title) {
-        mCurrentChat.child("title").setValue(new_title).addOnFailureListener(new OnFailureListener() {
+        mCurrentChat.child(TITLE).setValue(new_title).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
                 e.printStackTrace();
@@ -94,7 +93,7 @@ class ChatInteractor extends FirebaseInteractor {
 
 
     private class UserListener implements ChildEventListener {
-        private Chat chat;
+        private final Chat chat;
         private String targetUserName;
 
         UserListener(Chat chat) {

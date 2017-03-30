@@ -94,23 +94,6 @@ public class LoginInteractor extends FirebaseInteractor implements OnCompleteLis
                 .addOnCompleteListener(this);
     }
 
-    private void logEvent(int event) {
-        switch (event) {
-            case Event.LOGIN:
-                FirebaseUser user = mFirebaseAuth.getCurrentUser();
-                if (user != null) {
-                    Bundle bundle = new Bundle();
-                    bundle.putString("USERNAME", user.getDisplayName());
-                    bundle.putString("EMAIL", user.getEmail());
-                    bundle.putString("PROVIDER", user.getProviderId());
-                    ChatterinoApp.getFirebaseAnalytics().logEvent(FirebaseAnalytics.Event.LOGIN, bundle);
-                }
-                break;
-            default:
-                break;
-        }
-    }
-
     private void saveUserToDB(final FirebaseUser firebaseUser) {
         final UserAccount user = new UserAccount(firebaseUser);
         Log.d(TAG, user.toString());

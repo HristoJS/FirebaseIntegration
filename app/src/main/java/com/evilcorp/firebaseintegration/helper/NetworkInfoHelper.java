@@ -125,7 +125,7 @@ public class NetworkInfoHelper {
                     return true;
             }
         } catch (Exception e) {
-            return false;
+            e.printStackTrace();
         }
         return false;
     }

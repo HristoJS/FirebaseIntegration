@@ -129,7 +129,7 @@ public class LoginFragment extends BaseFragment implements LoginContract.View, V
     }
 
     @Override
-    public void loginSuccess(boolean email_verified) {
+    public void loginSuccess() {
         dismissProgress();
         Intent mainIntent = new Intent(getActivity(), MainActivity.class);
         startActivity(mainIntent);

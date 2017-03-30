@@ -4,14 +4,11 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
-import android.support.v4.view.ViewCompat;
 import android.widget.ImageView;
 
 import com.bumptech.glide.request.target.BitmapImageViewTarget;
-import com.evilcorp.firebaseintegration.R;
 
 /**
  * Created by hristo.stoyanov on 20-Feb-17.
@@ -20,9 +17,9 @@ import com.evilcorp.firebaseintegration.R;
 public class RounderCornerImage extends BitmapImageViewTarget {
     private static final int BORDER_WIDTH = 10;
 
-    private ImageView mImageView;
-    private Context mContext;
-    private int mBorderColor;
+    private final ImageView mImageView;
+    private final Context mContext;
+    private final int mBorderColor;
 
     public RounderCornerImage(Context context, ImageView view, int bolderColor) {
         super(view);

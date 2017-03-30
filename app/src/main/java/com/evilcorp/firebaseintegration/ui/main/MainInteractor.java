@@ -24,7 +24,7 @@ public class MainInteractor extends FirebaseInteractor implements MainContract.I
     private static final String TAG = MainInteractor.class.getSimpleName();
     private static final String WELCOME_MSG_KEY = "welcome_message";
 
-    private FirebaseUser mUser;
+    private final FirebaseUser mUser;
 
     public MainInteractor() {
         mUser = mFirebaseAuth.getCurrentUser();

@@ -8,8 +8,8 @@ import java.util.List;
 class FriendListPresenter implements FriendListContract.Presenter {
     private static final String TAG = FriendListPresenter.class.getSimpleName();
 
-    private FriendListContract.View mView;
-    private FriendListContract.Interactor mInteractor;
+    private final FriendListContract.View mView;
+    private final FriendListContract.Interactor mInteractor;
 
     FriendListPresenter(FriendListContract.View view, FriendListContract.Interactor interactor) {
         mView = view;
