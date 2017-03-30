@@ -9,7 +9,7 @@ import android.net.Uri;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
-import com.evilcorp.firebaseintegration.main.MainActivity;
+import com.evilcorp.firebaseintegration.ui.main.MainActivity;
 import com.evilcorp.firebaseintegration.R;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;

@@ -11,10 +11,10 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.evilcorp.firebaseintegration.R;
-import com.evilcorp.firebaseintegration.chat.ChatContract;
+import com.evilcorp.firebaseintegration.ui.chat.ChatContract;
 import com.evilcorp.firebaseintegration.view.RounderCornerImage;
-import com.evilcorp.firebaseintegration.model.firebase.Message;
-import com.evilcorp.firebaseintegration.model.firebase.UserAccount;
+import com.evilcorp.firebaseintegration.data.firebase.model.Message;
+import com.evilcorp.firebaseintegration.data.firebase.model.UserAccount;
 import com.google.firebase.database.Query;
 
 import java.text.SimpleDateFormat;

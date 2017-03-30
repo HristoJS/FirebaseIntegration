@@ -3,10 +3,10 @@ package com.evilcorp.firebaseintegration;
 import android.support.test.filters.LargeTest;
 import android.support.test.runner.AndroidJUnit4;
 
-import com.evilcorp.firebaseintegration.login.LoginInteractor;
-import com.evilcorp.firebaseintegration.login.LoginContract;
-import com.evilcorp.firebaseintegration.login.LoginFragment;
-import com.evilcorp.firebaseintegration.login.LoginPresenter;
+import com.evilcorp.firebaseintegration.ui.login.LoginInteractor;
+import com.evilcorp.firebaseintegration.ui.login.LoginContract;
+import com.evilcorp.firebaseintegration.ui.login.LoginFragment;
+import com.evilcorp.firebaseintegration.ui.login.LoginPresenter;
 
 import org.junit.Before;
 import org.junit.Test;

@@ -13,8 +13,8 @@ import com.bumptech.glide.Glide;
 import com.evilcorp.firebaseintegration.R;
 import com.evilcorp.firebaseintegration.view.RounderCornerImage;
 import com.evilcorp.firebaseintegration.helper.Time;
-import com.evilcorp.firebaseintegration.model.firebase.UserAccount;
-import com.evilcorp.firebaseintegration.model.firebase.UserStatus;
+import com.evilcorp.firebaseintegration.data.firebase.model.UserAccount;
+import com.evilcorp.firebaseintegration.data.firebase.model.UserStatus;
 
 import java.util.List;
 

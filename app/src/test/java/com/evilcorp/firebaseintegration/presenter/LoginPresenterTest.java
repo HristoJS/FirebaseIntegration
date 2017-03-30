@@ -1,12 +1,11 @@
 package com.evilcorp.firebaseintegration.presenter;
 
 import com.evilcorp.firebaseintegration.R;
-import com.evilcorp.firebaseintegration.login.LoginContract;
-import com.evilcorp.firebaseintegration.login.LoginInteractor;
-import com.evilcorp.firebaseintegration.login.LoginPresenter;
+import com.evilcorp.firebaseintegration.ui.login.LoginContract;
+import com.evilcorp.firebaseintegration.ui.login.LoginInteractor;
+import com.evilcorp.firebaseintegration.ui.login.LoginPresenter;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;

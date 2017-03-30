@@ -8,9 +8,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.evilcorp.firebaseintegration.MyApp;
+import com.evilcorp.firebaseintegration.ChatterinoApp;
 import com.evilcorp.firebaseintegration.R;
-import com.evilcorp.firebaseintegration.model.firebase.UserAccount;
+import com.evilcorp.firebaseintegration.data.firebase.model.UserAccount;
 import com.google.firebase.database.Query;
 /**
  * User List Adapter
@@ -30,7 +30,7 @@ public class OldFriendListAdapter extends FirebaseRecyclerAdapter<UserAccount,Ol
 
     @Override
     protected void populateViewHolder(FriendListViewHolder viewHolder, final UserAccount userAccount, int position) {
-        UserAccount myAcc = MyApp.getCurrentAccount();
+        UserAccount myAcc = ChatterinoApp.getCurrentAccount();
         assert myAcc != null;
         Log.d(TAG,myAcc.toString());
         if(!userAccount.equals(myAcc)) {

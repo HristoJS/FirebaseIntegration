@@ -14,7 +14,7 @@
         android:protectionLevel="signature" />
 
     <application
-        android:name=".MyApp"
+        android:name=".ChatterinoApp"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -27,7 +27,8 @@
             android:name="io.fabric.ApiKey"
             android:value="5d808aa660e3831ecdcc012117efdff70b8977a6" />
 
-        <activity android:name=".main.MainActivity"
+        <activity
+            android:name=".ui.main.MainActivity"
             android:theme="@style/AppTheme"/>
 
         <service
@@ -47,7 +48,7 @@
         </service>
 
         <activity
-            android:name=".login.LoginActivity"
+            android:name=".ui.login.LoginActivity"
             android:windowSoftInputMode="adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -56,7 +57,7 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".chat.ChatActivity" />
+        <activity android:name=".ui.chat.ChatActivity"/>
 
         <activity
             android:name="com.theartofdev.edmodo.cropper.CropImageActivity"

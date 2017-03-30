@@ -18,7 +18,7 @@ package com.evilcorp.firebaseintegration.adapter;
  * limitations under the License.
  */
 
-import com.evilcorp.firebaseintegration.helper.FirebaseArray;
+import com.evilcorp.firebaseintegration.data.firebase.FirebaseArray;
 import com.google.firebase.database.DatabaseError;
 
 import android.support.annotation.LayoutRes;
