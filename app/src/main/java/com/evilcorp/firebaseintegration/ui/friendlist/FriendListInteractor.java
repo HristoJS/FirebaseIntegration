@@ -7,7 +7,8 @@ import com.evilcorp.firebaseintegration.data.firebase.FirebaseCallback;
 import com.evilcorp.firebaseintegration.data.firebase.FirebaseInteractor;
 import com.evilcorp.firebaseintegration.data.firebase.model.AccountType;
 import com.evilcorp.firebaseintegration.data.firebase.model.Chat;
-import com.evilcorp.firebaseintegration.data.firebase.model.UserAccount;
+import com.evilcorp.firebaseintegration.data.firebase.model.user.UserAccount;
+import com.evilcorp.firebaseintegration.helper.Util;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -22,7 +23,7 @@ import java.util.List;
  * Created by hristo.stoyanov on 3/30/2017.
  */
 
-public class FriendListInteractor extends FirebaseInteractor implements FriendListContract.Interactor {
+class FriendListInteractor extends FirebaseInteractor implements FriendListContract.Interactor {
     private static final String TAG = FriendListInteractor.class.getSimpleName();
 
     private List<UserAccount> mUsers;
@@ -30,12 +31,8 @@ public class FriendListInteractor extends FirebaseInteractor implements FriendLi
     private ChildEventListener mUserListener;
     private ValueEventListener mChatListener;
 
-    public FriendListInteractor() {
-
-    }
-
     @Override
-    public void destroyListeners() {
+    public void destroyAllListeners() {
         destroyListener(mChatListener);
         destroyListener(mUserListener);
     }
@@ -49,10 +46,10 @@ public class FriendListInteractor extends FirebaseInteractor implements FriendLi
                 Log.d(TAG, "User Added.");
                 UserAccount user = dataSnapshot.getValue(UserAccount.class);
                 UserAccount currentUser = ChatterinoApp.getCurrentAccount();
-                if (currentUser.getAccountType() == AccountType.GUEST) {
+                if (currentUser == null || currentUser.getAccountType() == AccountType.GUEST) {
                     return;
                 }
-                if (!user.getId().equals(currentUser.getId()) && !mUsers.contains(user)) {
+                if (!Util.equals(user.getId(), currentUser.getId()) && !mUsers.contains(user)) {
                     mUsers.add(user);
                     callback.success(null);
                 }
@@ -67,7 +64,7 @@ public class FriendListInteractor extends FirebaseInteractor implements FriendLi
                 }
                 if (updateUser(updated_user)) {
                     callback.success(null);
-                } else throw new NullPointerException("User not found");
+                }
             }
 
             @Override
@@ -95,7 +92,7 @@ public class FriendListInteractor extends FirebaseInteractor implements FriendLi
             @Override
             public void onCancelled(DatabaseError databaseError) {
                 Log.e(TAG, databaseError.getMessage());
-                callback.fail(databaseError.toException());
+                callback.fail("Unable to get user list");
             }
         };
         mUsersTable.addChildEventListener(mUserListener);
@@ -104,7 +101,7 @@ public class FriendListInteractor extends FirebaseInteractor implements FriendLi
 
     private boolean updateUser(UserAccount updated_user) {
         for (UserAccount user : mUsers) {
-            if (user.getId().equals(updated_user.getId())) {
+            if (Util.equals(user.getId(), updated_user.getId())) {
                 Collections.replaceAll(mUsers, user, updated_user);
                 return true;
             }
@@ -140,8 +137,9 @@ public class FriendListInteractor extends FirebaseInteractor implements FriendLi
             @Override
             public void onCancelled(DatabaseError databaseError) {
                 Log.e(TAG, databaseError.getMessage());
-                callback.fail(databaseError.toException());
+                callback.fail("Unable to start chat");
             }
         };
+        mChatsTable.addValueEventListener(mChatListener);
     }
 }

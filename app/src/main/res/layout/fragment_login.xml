@@ -3,8 +3,10 @@
             xmlns:app="http://schemas.android.com/apk/res-auto"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            tools:mContext="com.evilcorp.firebaseintegration.ui.register.LoginFragment">
-<android.support.constraint.ConstraintLayout
+            tools:mContext="com.evilcorp.firebaseintegration.ui.register.LoginFragment"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+    <android.support.constraint.ConstraintLayout
     android:id="@+id/email_login_form"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">

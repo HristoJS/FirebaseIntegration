@@ -6,7 +6,8 @@ import android.util.Log;
 import com.evilcorp.firebaseintegration.data.firebase.FirebaseInteractor;
 import com.evilcorp.firebaseintegration.data.firebase.model.Chat;
 import com.evilcorp.firebaseintegration.data.firebase.model.Message;
-import com.evilcorp.firebaseintegration.data.firebase.model.UserAccount;
+import com.evilcorp.firebaseintegration.data.firebase.model.user.UserAccount;
+import com.evilcorp.firebaseintegration.helper.Util;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -23,7 +24,7 @@ import java.util.List;
  * Created by hristo.stoyanov on 15-Feb-17.
  */
 
-class ChatInteractor extends FirebaseInteractor {
+class ChatInteractor extends FirebaseInteractor implements ChatContract.Interactor {
     private static final String TAG = ChatInteractor.class.getSimpleName();
     private static final String TITLE = "title";
     private final DatabaseReference mCurrentChat;
@@ -31,7 +32,7 @@ class ChatInteractor extends FirebaseInteractor {
     private final List<UserAccount> mChatParticipants;
     private ChatListener mChatListener;
     private UserListener mUserListener;
-    private final ChatStatusListener mChatStatusListener;
+    private ChatStatusListener mChatStatusListener;
     private final String mTargetUserId;
 
     interface ChatStatusListener {
@@ -40,19 +41,18 @@ class ChatInteractor extends FirebaseInteractor {
 
     }
 
-    ChatInteractor(String chatId, String userId, ChatStatusListener listener) {
-        this.mChatStatusListener = listener;
-        this.mTargetUserId = userId;
-
+    ChatInteractor(String chatId, String userId) {
+        mTargetUserId = userId;
         mCurrentChat = mChatsTable.child(chatId);
         mCurrentChatMessages = mMessagesTable.child(chatId);
         mChatParticipants = new ArrayList<>();
-        initChat();
     }
 
-    private void initChat() {
+    @Override
+    public void initChat(ChatStatusListener listener) {
+        mChatStatusListener = listener;
         mChatListener = new ChatListener();
-        mUsersTable.addValueEventListener(mChatListener);
+        mCurrentChat.addValueEventListener(mChatListener);
     }
 
     private void initUsers(final Chat chat) {
@@ -60,34 +60,40 @@ class ChatInteractor extends FirebaseInteractor {
         mUsersTable.addChildEventListener(mUserListener);
     }
 
-    String getUserId() {
+    @Override
+    public String getUserId() {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         return (user != null) ? user.getUid() : null;
     }
 
-    List<UserAccount> getChatParticipants() {
+    @Override
+    public List<UserAccount> getChatParticipants() {
         return mChatParticipants;
     }
 
-    DatabaseReference getChatReference() {
-        return mCurrentChat;
+    @Override
+    public DatabaseReference getChatReference() {
+        return mCurrentChatMessages;
     }
 
-    void changeTitle(String new_title) {
+    @Override
+    public void changeTitle(String new_title) {
         mCurrentChat.child(TITLE).setValue(new_title).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-                e.printStackTrace();
+                Log.e(TAG, "Trying to change chat title", e);
             }
         });
     }
 
-    void destroyListeners() {
+    @Override
+    public void destroyAllListeners() {
         destroyListener(mChatListener);
         destroyListener(mUserListener);
     }
 
-    void sendMessage(Message chatMessage) {
+    @Override
+    public void sendMessage(Message chatMessage) {
         mCurrentChatMessages.push().setValue(chatMessage);
     }
 
@@ -103,7 +109,7 @@ class ChatInteractor extends FirebaseInteractor {
         @Override
         public void onChildAdded(DataSnapshot dataSnapshot, String s) {
             UserAccount userAccount = dataSnapshot.getValue(UserAccount.class);
-            if (userAccount.getId().equals(mTargetUserId)) {
+            if (Util.equals(userAccount.getId(), mTargetUserId)) {
                 targetUserName = userAccount.getName();
             }
             if (chat.getUserIds().contains(userAccount.getId())) {

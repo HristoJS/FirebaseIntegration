@@ -6,6 +6,7 @@ import com.evilcorp.firebaseintegration.BuildConfig;
 import com.evilcorp.firebaseintegration.ChatterinoApp;
 import com.evilcorp.firebaseintegration.R;
 import com.evilcorp.firebaseintegration.data.firebase.model.Event;
+import com.evilcorp.firebaseintegration.ui.base.BaseContract;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -21,7 +22,7 @@ import com.google.firebase.storage.FirebaseStorage;
  * Created by hristo.stoyanov on 3/29/2017.
  */
 
-public abstract class FirebaseInteractor {
+public abstract class FirebaseInteractor implements BaseContract.Interactor {
     private static final String USERS = "users";
     private static final String MESSAGES = "messages";
     private static final String CHATS = "chats";
@@ -68,6 +69,10 @@ public abstract class FirebaseInteractor {
         }
     }
 
+    @Override
+    public void destroyAllListeners() {
+
+    }
 
     protected void logEvent(int event) {
         switch (event) {

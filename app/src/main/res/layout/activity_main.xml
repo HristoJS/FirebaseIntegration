@@ -12,6 +12,7 @@
         android:layout_above="@+id/bottomNavigationView" >
     <include layout="@layout/user_toolbar"
              android:id="@+id/user_panel"
+             app:elevation="8dp"
              android:layout_height="200dp"
              android:layout_width="match_parent" />
         <FrameLayout
@@ -26,6 +27,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/bottomNavigationView"
+        app:elevation="8dp"
+        android:background="@android:color/white"
         android:layout_alignParentBottom="true"
         app:menu="@menu/bottom_navigation_items">
     </android.support.design.widget.BottomNavigationView>

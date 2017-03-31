@@ -3,7 +3,9 @@ package com.evilcorp.firebaseintegration.ui.chat;
 
 import android.content.Context;
 
-import com.evilcorp.firebaseintegration.data.firebase.model.UserAccount;
+import com.evilcorp.firebaseintegration.data.firebase.model.Message;
+import com.evilcorp.firebaseintegration.data.firebase.model.user.UserAccount;
+import com.evilcorp.firebaseintegration.ui.base.BaseContract;
 import com.google.firebase.database.DatabaseReference;
 
 import java.util.List;
@@ -11,7 +13,7 @@ import java.util.List;
 
 public interface ChatContract {
 
-    interface View {
+    interface View extends BaseContract.View {
 
         List<UserAccount> getChatParticipants();
 
@@ -25,9 +27,7 @@ public interface ChatContract {
 
     }
 
-    interface Presenter {
-
-        void destroy();
+    interface Presenter extends BaseContract.Presenter {
 
         void changeTitle(String new_title);
 
@@ -37,7 +37,22 @@ public interface ChatContract {
 
         DatabaseReference getChatReference();
 
-        void sendMessage(String message, String uId, long date);
+        void sendMessage(String message, String uId);
 
+    }
+
+    interface Interactor extends BaseContract.Interactor {
+
+        String getUserId();
+
+        List<UserAccount> getChatParticipants();
+
+        DatabaseReference getChatReference();
+
+        void changeTitle(String new_title);
+
+        void sendMessage(Message chatMessage);
+
+        void initChat(ChatInteractor.ChatStatusListener listener);
     }
 }

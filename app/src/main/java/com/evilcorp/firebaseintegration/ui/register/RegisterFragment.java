@@ -34,13 +34,11 @@ import static android.app.Activity.RESULT_OK;
 public class RegisterFragment extends BaseFragment implements View.OnClickListener, RegisterContract.View {
     private static final String TAG = RegisterFragment.class.getSimpleName();
     public static final int SELECT_PICTURE = 0x214;
-    public static final int CROP_PICTURE = 0x314;
     private static final int PICTURE_CROP_WIDTH = 100;
     private static final int PICTURE_CROP_HEIGHT = 100;
 
     private static Uri SELECTED_IMAGE_URI;
 
-    private ImageView mWelcomePictureImageView;
     private RegisterContract.Presenter mPresenter;
     private TextInputEditText mEmailEditText;
     private TextInputEditText mRepeatEmailEditText;
@@ -49,8 +47,6 @@ public class RegisterFragment extends BaseFragment implements View.OnClickListen
     private TextInputEditText mNameEditText;
     private TextInputEditText mCountryEditText;
     private AppCompatImageButton mAddImageButton;
-
-    private boolean mImageSelected = false;
 
     public RegisterFragment() {
         // Required empty public constructor
@@ -181,6 +177,12 @@ public class RegisterFragment extends BaseFragment implements View.OnClickListen
     public void onError(String error) {
         dismissProgress();
         showAlert(error);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mPresenter.onDestroy();
     }
 }
 

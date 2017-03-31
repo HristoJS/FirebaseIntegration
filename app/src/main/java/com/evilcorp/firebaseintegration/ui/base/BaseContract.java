@@ -7,6 +7,8 @@ package com.evilcorp.firebaseintegration.ui.base;
 public interface BaseContract {
     interface View {
 
+        boolean isActive();
+
         void onError(String error);
 
     }
@@ -20,6 +22,8 @@ public interface BaseContract {
     }
 
     interface Interactor {
+
+        void destroyAllListeners();
 
     }
 }

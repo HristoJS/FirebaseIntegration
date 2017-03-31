@@ -8,6 +8,6 @@ public interface FirebaseCallback<T> {
 
     void success(T result);
 
-    void fail(Exception exception);
+    void fail(String error);
 
 }

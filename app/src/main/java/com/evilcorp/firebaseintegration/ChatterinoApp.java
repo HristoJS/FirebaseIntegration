@@ -3,12 +3,13 @@ package com.evilcorp.firebaseintegration;
 import android.os.StrictMode;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.multidex.MultiDexApplication;
 
 import com.evilcorp.firebaseintegration.data.firebase.FirebaseConnection;
 import com.evilcorp.firebaseintegration.helper.Time;
-import com.evilcorp.firebaseintegration.data.firebase.model.GuestAccount;
-import com.evilcorp.firebaseintegration.data.firebase.model.UserAccount;
+import com.evilcorp.firebaseintegration.data.firebase.model.user.GuestAccount;
+import com.evilcorp.firebaseintegration.data.firebase.model.user.UserAccount;
 import com.evilcorp.firebaseintegration.data.firebase.model.UserStatus;
 import com.facebook.CallbackManager;
 import com.google.android.gms.ads.MobileAds;
@@ -102,12 +103,12 @@ public class ChatterinoApp extends MultiDexApplication {
         return Auth.GoogleSignInApi;
     }
 
-    @NonNull
+    @Nullable
     public static UserAccount getCurrentAccount(){
         if(currentAccount == null) {
             FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
             if(user == null){
-                throw new NullPointerException("User cannot be null");
+                return null;
             }
             if(user.isAnonymous()){
                 return new GuestAccount();

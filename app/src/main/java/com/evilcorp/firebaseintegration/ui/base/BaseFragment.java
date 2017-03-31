@@ -11,8 +11,7 @@ import android.widget.Toast;
 import com.evilcorp.firebaseintegration.R;
 
 
-
-public abstract class BaseFragment extends Fragment {
+public abstract class BaseFragment extends Fragment implements BaseContract.View {
     private ProgressDialog mProgressDialog;
     private AlertDialog mAlertDialog;
     private ProgressBar mProgressBar;
@@ -68,5 +67,16 @@ public abstract class BaseFragment extends Fragment {
                     }
                 }).create();
         mAlertDialog.show();
+    }
+
+
+    @Override
+    public void onError(String error) {
+        showAlert(error);
+    }
+
+    @Override
+    public boolean isActive() {
+        return isAdded() && isVisible();
     }
 }

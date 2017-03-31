@@ -12,10 +12,11 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.evilcorp.firebaseintegration.R;
+import com.evilcorp.firebaseintegration.helper.Time;
 import com.evilcorp.firebaseintegration.ui.base.BaseActivity;
 import com.evilcorp.firebaseintegration.ui.friendlist.FriendListFragment;
 import com.evilcorp.firebaseintegration.adapter.ChatAdapter;
-import com.evilcorp.firebaseintegration.data.firebase.model.UserAccount;
+import com.evilcorp.firebaseintegration.data.firebase.model.user.UserAccount;
 
 import java.util.Date;
 import java.util.List;
@@ -52,7 +53,7 @@ public class ChatActivity extends BaseActivity implements ChatContract.View, Vie
         if (arguments.containsKey(CHAT_ID) && arguments.containsKey(USER_ID)) {
             String chatId = arguments.getString(CHAT_ID);
             String userId = arguments.getString(USER_ID);
-            mPresenter = new ChatPresenter(this, chatId, userId);
+            mPresenter = new ChatPresenter(this, new ChatInteractor(chatId, userId));
         } else {
             Log.d(TAG, "No chats available.");
             finish();
@@ -76,15 +77,12 @@ public class ChatActivity extends BaseActivity implements ChatContract.View, Vie
     @Override
     public void onDestroy() {
         super.onDestroy();
-        mPresenter.destroy();
+        mPresenter.onDestroy();
         mPresenter = null;
     }
 
     @Override
     public void setupRecyclerView(List<UserAccount> chatParticipants) {
-        mLinearLayoutManager = new LinearLayoutManager(getContext());
-        mLinearLayoutManager.setStackFromEnd(true);
-        mMessageRecyclerView.setLayoutManager(mLinearLayoutManager);
         final ChatAdapter chatAdapter = new ChatAdapter(this, mPresenter.getChatReference(), chatParticipants);
         chatAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
             @Override
@@ -104,6 +102,9 @@ public class ChatActivity extends BaseActivity implements ChatContract.View, Vie
             }
         });
         mMessageRecyclerView.setAdapter(chatAdapter);
+        mLinearLayoutManager = new LinearLayoutManager(getContext());
+        mLinearLayoutManager.setStackFromEnd(true);
+        mMessageRecyclerView.setLayoutManager(mLinearLayoutManager);
     }
 
     @Override
@@ -123,7 +124,7 @@ public class ChatActivity extends BaseActivity implements ChatContract.View, Vie
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.sendButton:
-                mPresenter.sendMessage(mMessageEditText.getText().toString(), getUserId(), new Date().getTime());
+                mPresenter.sendMessage(mMessageEditText.getText().toString(), getUserId());
                 mMessageEditText.setText("");
                 break;
             default:

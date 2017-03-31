@@ -4,6 +4,7 @@ package com.evilcorp.firebaseintegration.data.local;
  * Created by hristo.stoyanov on 01-Feb-17.
  */
 
+@Deprecated
 public class Address {
 
     public String[] addressLines;

@@ -1,7 +1,7 @@
 package com.evilcorp.firebaseintegration.ui.friendlist;
 
 import com.evilcorp.firebaseintegration.data.firebase.FirebaseCallback;
-import com.evilcorp.firebaseintegration.data.firebase.model.UserAccount;
+import com.evilcorp.firebaseintegration.data.firebase.model.user.UserAccount;
 import com.evilcorp.firebaseintegration.ui.base.BaseContract;
 
 import java.util.List;
@@ -29,9 +29,7 @@ public interface FriendListContract {
 
     }
 
-    interface Interactor {
-
-        void destroyListeners();
+    interface Interactor extends BaseContract.Interactor {
 
         void initChat(String targetUserId, FirebaseCallback<String> callback);
 

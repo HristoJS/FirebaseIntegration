@@ -1,17 +1,19 @@
 package com.evilcorp.firebaseintegration.ui.friendlist;
 
 import com.evilcorp.firebaseintegration.data.firebase.FirebaseCallback;
-import com.evilcorp.firebaseintegration.data.firebase.model.UserAccount;
+import com.evilcorp.firebaseintegration.data.firebase.model.user.UserAccount;
+import com.evilcorp.firebaseintegration.ui.base.BasePresenter;
 
 import java.util.List;
 
-class FriendListPresenter implements FriendListContract.Presenter {
+class FriendListPresenter extends BasePresenter implements FriendListContract.Presenter {
     private static final String TAG = FriendListPresenter.class.getSimpleName();
 
     private final FriendListContract.View mView;
     private final FriendListContract.Interactor mInteractor;
 
     FriendListPresenter(FriendListContract.View view, FriendListContract.Interactor interactor) {
+        super(view, interactor);
         mView = view;
         mInteractor = interactor;
     }
@@ -25,16 +27,13 @@ class FriendListPresenter implements FriendListContract.Presenter {
             }
 
             @Override
-            public void fail(Exception exception) {
-                mView.onError(exception.getLocalizedMessage());
+            public void fail(String error) {
+                if (mView.isActive()) {
+                    mView.onError(error);
+                }
             }
         });
         mView.setupRecyclerView(users);
-    }
-
-    @Override
-    public void onDestroy() {
-        mInteractor.destroyListeners();
     }
 
     @Override
@@ -46,8 +45,10 @@ class FriendListPresenter implements FriendListContract.Presenter {
             }
 
             @Override
-            public void fail(Exception exception) {
-                mView.onError(exception.getLocalizedMessage());
+            public void fail(String error) {
+                if (mView.isActive()) {
+                    mView.onError(error);
+                }
             }
         });
     }

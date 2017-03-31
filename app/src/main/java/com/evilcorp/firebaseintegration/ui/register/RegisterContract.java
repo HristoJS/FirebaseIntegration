@@ -4,7 +4,7 @@ package com.evilcorp.firebaseintegration.ui.register;
 import android.net.Uri;
 
 import com.evilcorp.firebaseintegration.data.firebase.FirebaseCallback;
-import com.evilcorp.firebaseintegration.data.firebase.model.UserAccount;
+import com.evilcorp.firebaseintegration.data.firebase.model.user.UserAccount;
 import com.evilcorp.firebaseintegration.ui.base.BaseContract;
 
 public interface RegisterContract {
@@ -24,6 +24,5 @@ public interface RegisterContract {
 
         void createUser(UserAccount user, FirebaseCallback<Void> callback);
 
-        void destroy();
     }
 }

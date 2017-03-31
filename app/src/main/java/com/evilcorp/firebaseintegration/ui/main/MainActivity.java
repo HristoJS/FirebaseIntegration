@@ -15,7 +15,7 @@ import com.evilcorp.firebaseintegration.R;
 import com.evilcorp.firebaseintegration.ui.base.BaseActivity;
 import com.evilcorp.firebaseintegration.ui.friendlist.FriendListFragment;
 import com.evilcorp.firebaseintegration.ui.login.LoginActivity;
-import com.evilcorp.firebaseintegration.settings.SettingsFragment;
+import com.evilcorp.firebaseintegration.ui.settings.SettingsFragment;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
@@ -49,6 +49,12 @@ public class MainActivity extends BaseActivity implements MainContract.View {
         mPresenter.getWelcomeMessage();
         mPresenter.downloadImage();
         //initAds();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mPresenter.onDestroy();
     }
 
     @Override
@@ -192,6 +198,11 @@ public class MainActivity extends BaseActivity implements MainContract.View {
     private void requestNewInterstitial() {
         AdRequest adRequest = new AdRequest.Builder().build();
         mInterstitialAd.loadAd(adRequest);
+    }
+
+    @Override
+    public void onError(String error) {
+        showAlert(error);
     }
 
 

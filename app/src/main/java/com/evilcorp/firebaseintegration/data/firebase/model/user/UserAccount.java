@@ -1,9 +1,10 @@
-package com.evilcorp.firebaseintegration.data.firebase.model;
+package com.evilcorp.firebaseintegration.data.firebase.model.user;
 
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.Log;
 
+import com.evilcorp.firebaseintegration.data.firebase.model.AccountType;
 import com.facebook.Profile;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserInfo;
@@ -23,6 +24,7 @@ public class UserAccount implements Parcelable {
 
     public UserAccount(){
     }
+
 
     private UserAccount(Parcel in) {
         this.email = in.readString();
@@ -51,7 +53,7 @@ public class UserAccount implements Parcelable {
         for (UserInfo userInfo : user.getProviderData()) {
             String providerId = userInfo.getProviderId();
             Log.d(TAG,providerId);
-            if(!providerId.equals("firebase")){
+            if (!"firebase".equals(providerId)) {
                 switch (providerId){
                     case "password":
                         this.accountType = AccountType.EMAIL;

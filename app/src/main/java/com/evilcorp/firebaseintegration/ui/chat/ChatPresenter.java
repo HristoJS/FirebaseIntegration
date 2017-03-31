@@ -1,19 +1,23 @@
 package com.evilcorp.firebaseintegration.ui.chat;
 
 import com.evilcorp.firebaseintegration.data.firebase.model.Message;
-import com.evilcorp.firebaseintegration.data.firebase.model.UserAccount;
+import com.evilcorp.firebaseintegration.data.firebase.model.user.UserAccount;
+import com.evilcorp.firebaseintegration.helper.Time;
+import com.evilcorp.firebaseintegration.ui.base.BasePresenter;
 import com.google.firebase.database.DatabaseReference;
 
 import java.util.List;
 
 
-class ChatPresenter implements ChatContract.Presenter, ChatInteractor.ChatStatusListener {
+class ChatPresenter extends BasePresenter implements ChatContract.Presenter, ChatInteractor.ChatStatusListener {
     private final ChatContract.View mChatView;
-    private final ChatInteractor mChatInteractor;
+    private final ChatContract.Interactor mChatInteractor;
 
-    ChatPresenter(ChatContract.View view, String chatId, String userId) {
+    ChatPresenter(ChatContract.View view, ChatContract.Interactor interactor) {
+        super(view, interactor);
         this.mChatView = view;
-        mChatInteractor = new ChatInteractor(chatId, userId, this);
+        mChatInteractor = interactor;
+        mChatInteractor.initChat(this);
     }
 
     @Override
@@ -37,14 +41,9 @@ class ChatPresenter implements ChatContract.Presenter, ChatInteractor.ChatStatus
     }
 
     @Override
-    public void sendMessage(String message, String uId, long date) {
-        Message chatMessage = new Message(message, uId, date);
+    public void sendMessage(String message, String uId) {
+        Message chatMessage = new Message(message, uId, Time.getTime());
         mChatInteractor.sendMessage(chatMessage);
-    }
-
-    @Override
-    public void destroy() {
-        mChatInteractor.destroyListeners();
     }
 
     @Override

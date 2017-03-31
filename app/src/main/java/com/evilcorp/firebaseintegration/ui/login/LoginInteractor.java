@@ -1,6 +1,5 @@
 package com.evilcorp.firebaseintegration.ui.login;
 
-import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
@@ -10,7 +9,7 @@ import com.evilcorp.firebaseintegration.data.firebase.FirebaseConnection;
 import com.evilcorp.firebaseintegration.data.firebase.FirebaseInteractor;
 import com.evilcorp.firebaseintegration.data.firebase.model.AccountType;
 import com.evilcorp.firebaseintegration.data.firebase.model.Event;
-import com.evilcorp.firebaseintegration.data.firebase.model.UserAccount;
+import com.evilcorp.firebaseintegration.data.firebase.model.user.UserAccount;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
 import com.facebook.login.LoginResult;
@@ -19,7 +18,6 @@ import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FacebookAuthProvider;
@@ -36,12 +34,13 @@ import com.twitter.sdk.android.core.TwitterException;
 import com.twitter.sdk.android.core.TwitterSession;
 
 
-public class LoginInteractor extends FirebaseInteractor implements OnCompleteListener<AuthResult> {
+public class LoginInteractor extends FirebaseInteractor implements LoginContract.Interactor, OnCompleteListener<AuthResult> {
     private static final String TAG = LoginInteractor.class.getName();
 
     private FirebaseCallback<Void> mFirebaseCallback;
     private FacebookLoginHandler mFacebookLoginHandler;
     private TwitterLoginHandler mTwitterLoginHandler;
+    private ValueEventListener mSaveUserListener;
 
     LoginInteractor() {
         mFacebookLoginHandler = new FacebookLoginHandler();
@@ -51,24 +50,34 @@ public class LoginInteractor extends FirebaseInteractor implements OnCompleteLis
     }
 
     //region Public Methods
-    void destroy() {
+
+    @Override
+    public void destroyAllListeners() {
+        super.destroyAllListeners();
         mFacebookLoginHandler = null;
         mTwitterLoginHandler = null;
+        if (mSaveUserListener != null) {
+            mUsersTable.removeEventListener(mSaveUserListener);
+        }
     }
 
-    void setCallback(FirebaseCallback<Void> callback) {
+    @Override
+    public void setCallback(FirebaseCallback<Void> callback) {
         this.mFirebaseCallback = callback;
     }
 
-    void loginWithEmail(String email, String password) {
+    @Override
+    public void loginWithEmail(String email, String password) {
         mFirebaseAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(this);
     }
 
-    void loginAsGuest() {
+    @Override
+    public void loginAsGuest() {
         mFirebaseAuth.signInAnonymously().addOnCompleteListener(this);
     }
 
-    void loginWithGoogle(GoogleSignInResult result) {
+    @Override
+    public void loginWithGoogle(GoogleSignInResult result) {
         GoogleSignInAccount account = result.getSignInAccount();
         if (account != null) {
             AuthCredential credential = GoogleAuthProvider.getCredential(account.getIdToken(), null);
@@ -76,10 +85,22 @@ public class LoginInteractor extends FirebaseInteractor implements OnCompleteLis
         }
     }
 
-    boolean isUserLoggedIn() {
+    @Override
+    public boolean isUserLoggedIn() {
         UserAccount account = ChatterinoApp.getCurrentAccount();
-        return (account.getAccountType() != AccountType.GUEST);
+        return account != null && (account.getAccountType() != AccountType.GUEST);
     }
+
+    @Override
+    public FacebookLoginHandler getFacebookLoginHandler() {
+        return mFacebookLoginHandler;
+    }
+
+    @Override
+    public TwitterLoginHandler getTwitterLoginHandler() {
+        return mTwitterLoginHandler;
+    }
+
 
     //endregion
 
@@ -98,8 +119,7 @@ public class LoginInteractor extends FirebaseInteractor implements OnCompleteLis
         final UserAccount user = new UserAccount(firebaseUser);
         Log.d(TAG, user.toString());
         final String userId = firebaseUser.getUid();
-
-        mUsersTable.addListenerForSingleValueEvent(new ValueEventListener() {
+        mSaveUserListener = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (!dataSnapshot.hasChild(userId) && !firebaseUser.isAnonymous()) {
@@ -107,7 +127,7 @@ public class LoginInteractor extends FirebaseInteractor implements OnCompleteLis
                             .addOnFailureListener(new OnFailureListener() {
                                 @Override
                                 public void onFailure(@NonNull Exception e) {
-                                    e.printStackTrace();
+                                    Log.e(TAG, "Trying to add user to DB", e);
                                 }
                             });
                     Log.d(TAG,"User Added to DB.");
@@ -118,16 +138,9 @@ public class LoginInteractor extends FirebaseInteractor implements OnCompleteLis
             public void onCancelled(DatabaseError databaseError) {
                 Log.e(TAG, databaseError.getMessage());
             }
-        });
-//        mUserDbRef.child(userId).setValue(user)
-//                .addOnFailureListener(new OnFailureListener() {
-//                    @Override
-//                    public void onFailure(@NonNull Exception e) {
-//                        e.printStackTrace();
-//                    }
-//                });
+        };
+        mUsersTable.addListenerForSingleValueEvent(mSaveUserListener);
     }
-
 
     public void onComplete(@NonNull Task<AuthResult> task) {
         if (task.isSuccessful()) {
@@ -141,15 +154,18 @@ public class LoginInteractor extends FirebaseInteractor implements OnCompleteLis
                 for (UserInfo userInfo : user.getProviderData()) {
                     String id = userInfo.getProviderId();
                     Log.d(TAG, id);
-                    if (id.equals("password") && !isEmailVerified(user)) {
-                        mFirebaseCallback.fail(new Exception("Email is not verified"));
+                    if ("password".equals(id) && !isEmailVerified(user)) {
+                        mFirebaseCallback.fail("Email is not verified");
                         return;
                     }
                 }
             }
             mFirebaseCallback.success(null);
             logEvent(Event.LOGIN);
-        } else mFirebaseCallback.fail(task.getException());
+        } else {
+            mFirebaseCallback.fail("Unable to login");
+            Log.e(TAG, "Trying to login", task.getException());
+        }
     }
     //endregion
 
@@ -159,11 +175,7 @@ public class LoginInteractor extends FirebaseInteractor implements OnCompleteLis
         loginWithCredential(credential);
     }
 
-    FacebookLoginHandler getFacebookLoginHandler() {
-        return mFacebookLoginHandler;
-    }
-
-    class FacebookLoginHandler implements FacebookCallback<LoginResult> {
+    final class FacebookLoginHandler implements FacebookCallback<LoginResult> {
 
         public void onSuccess(LoginResult loginResult) {
             loginWithFacebook(loginResult.getAccessToken().getToken());
@@ -174,8 +186,8 @@ public class LoginInteractor extends FirebaseInteractor implements OnCompleteLis
         }
 
         public void onError(FacebookException error) {
-            mFirebaseCallback.fail(new Exception("Unable to login with facebook"));
-            error.printStackTrace();
+            mFirebaseCallback.fail("Unable to login with facebook");
+            Log.e(TAG, "Trying to login with facebook", error);
         }
     }
     //endregion
@@ -186,19 +198,16 @@ public class LoginInteractor extends FirebaseInteractor implements OnCompleteLis
         loginWithCredential(credential);
     }
 
-    TwitterLoginHandler getTwitterLoginHandler() {
-        return mTwitterLoginHandler;
-    }
 
-    class TwitterLoginHandler extends com.twitter.sdk.android.core.Callback<TwitterSession> {
+    final class TwitterLoginHandler extends com.twitter.sdk.android.core.Callback<TwitterSession> {
         public void success(Result<TwitterSession> twitterSessionResult) {
             TwitterAuthToken authToken = twitterSessionResult.data.getAuthToken();
             loginWithTwitter(authToken.token, authToken.secret);
         }
 
         public void failure(TwitterException e) {
-            mFirebaseCallback.fail(new Exception("Unable to login with twitter"));
-            e.printStackTrace();
+            mFirebaseCallback.fail("Unable to login with twitter");
+            Log.e(TAG, "Trying to login with twitter", e);
         }
     }
     //endregion

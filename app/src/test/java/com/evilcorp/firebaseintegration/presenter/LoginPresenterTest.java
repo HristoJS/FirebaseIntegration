@@ -78,7 +78,7 @@ public class LoginPresenterTest {
 
     @Test
     public void testFail() {
-        mLoginPresenter.fail(new Exception("User not registered."));
+        mLoginPresenter.fail("User not registered.");
         verify(loginView).loginFail("User not registered.");
     }
 

@@ -1,6 +1,7 @@
 package com.evilcorp.firebaseintegration.ui.forgotpassword;
 
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 import com.evilcorp.firebaseintegration.data.firebase.FirebaseCallback;
 import com.evilcorp.firebaseintegration.data.firebase.FirebaseInteractor;
@@ -12,10 +13,7 @@ import com.google.android.gms.tasks.Task;
  */
 
 public class ForgotPasswordInteractor extends FirebaseInteractor implements ForgotPasswordContract.Interactor {
-
-    public ForgotPasswordInteractor() {
-
-    }
+    private static final String TAG = ForgotPasswordInteractor.class.getSimpleName();
 
     @Override
     public void validatePasscode(String passcode, final FirebaseCallback<String> callback) {
@@ -25,7 +23,8 @@ public class ForgotPasswordInteractor extends FirebaseInteractor implements Forg
                 if (task.isSuccessful()) {
                     callback.success(task.getResult());
                 } else {
-                    callback.fail(task.getException());
+                    callback.fail("Invalid passcode");
+                    Log.e(TAG, "Trying to validate passcode", task.getException());
                 }
             }
         });
@@ -39,7 +38,8 @@ public class ForgotPasswordInteractor extends FirebaseInteractor implements Forg
                 if (task.isSuccessful()) {
                     callback.success(task.getResult());
                 } else {
-                    callback.fail(task.getException());
+                    callback.fail("Unable to send reset email");
+                    Log.e(TAG, "Trying to send reset email", task.getException());
                 }
             }
         });

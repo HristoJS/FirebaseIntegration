@@ -4,15 +4,18 @@ import android.net.Uri;
 
 import com.evilcorp.firebaseintegration.data.firebase.FirebaseCallback;
 import com.evilcorp.firebaseintegration.data.firebase.model.AccountType;
-import com.evilcorp.firebaseintegration.data.firebase.model.UserAccount;
+import com.evilcorp.firebaseintegration.data.firebase.model.user.UserAccount;
+import com.evilcorp.firebaseintegration.helper.Util;
+import com.evilcorp.firebaseintegration.ui.base.BasePresenter;
 
 
-public class RegisterPresenter implements RegisterContract.Presenter, FirebaseCallback<Void> {
+class RegisterPresenter extends BasePresenter implements RegisterContract.Presenter, FirebaseCallback<Void> {
 
     private final RegisterContract.View mRegisterView;
-    private final RegisterInteractor mRegisterInteractor;
+    private final RegisterContract.Interactor mRegisterInteractor;
 
-    public RegisterPresenter(RegisterContract.View view, RegisterInteractor interactor) {
+    RegisterPresenter(RegisterContract.View view, RegisterContract.Interactor interactor) {
+        super(view, interactor);
         this.mRegisterView = view;
         this.mRegisterInteractor = interactor;
     }
@@ -27,11 +30,11 @@ public class RegisterPresenter implements RegisterContract.Presenter, FirebaseCa
             mRegisterView.onError("You need to select an avatar");
             return;
         }
-        if (!email.equals(confirm_email)) {
+        if (!Util.equals(email, confirm_email)) {
             mRegisterView.onError("Emails don't match");
             return;
         }
-        if (!password.equals(confirm_password)) {
+        if (!Util.equals(password, confirm_password)) {
             mRegisterView.onError("Passwords don't match");
             return;
         }
@@ -47,17 +50,6 @@ public class RegisterPresenter implements RegisterContract.Presenter, FirebaseCa
         mRegisterInteractor.createUser(userAccount, this);
     }
 
-    private boolean isEmpty(String string) {
-        return string.equals("");
-    }
-
-    private boolean isValidEmail(String email) {
-        return email.contains("@");
-    }
-
-    private boolean isValidPassword(String password) {
-        return password.length() > 5 && password.length() < 20;
-    }
 
     @Override
     public void success(Void result) {
@@ -65,17 +57,9 @@ public class RegisterPresenter implements RegisterContract.Presenter, FirebaseCa
     }
 
     @Override
-    public void fail(Exception exception) {
-        mRegisterView.onError(exception.getLocalizedMessage());
-    }
-
-    @Override
-    public void onCreate() {
-
-    }
-
-    @Override
-    public void onDestroy() {
-        mRegisterInteractor.destroy();
+    public void fail(String error) {
+        if (mRegisterView.isActive()) {
+            mRegisterView.onError(error);
+        }
     }
 }

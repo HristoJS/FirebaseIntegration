@@ -1,52 +1,59 @@
 package com.evilcorp.firebaseintegration.ui.forgotpassword;
 
 import com.evilcorp.firebaseintegration.data.firebase.FirebaseCallback;
+import com.evilcorp.firebaseintegration.ui.base.BasePresenter;
 
-class ForgotPasswordPresenter implements ForgotPasswordContract.Presenter {
-    private final ForgotPasswordContract.View mForgotPasswordView;
-    private final ForgotPasswordInteractor mForgotPasswordInteractor;
+class ForgotPasswordPresenter extends BasePresenter implements ForgotPasswordContract.Presenter {
+    private final ForgotPasswordContract.View mView;
+    private final ForgotPasswordContract.Interactor mInteractor;
 
-    ForgotPasswordPresenter(ForgotPasswordContract.View view, ForgotPasswordInteractor interactor) {
-        mForgotPasswordView = view;
-        mForgotPasswordInteractor = interactor;
+    ForgotPasswordPresenter(ForgotPasswordContract.View view, ForgotPasswordContract.Interactor interactor) {
+        super(view, interactor);
+        mView = view;
+        mInteractor = interactor;
     }
 
     @Override
     public void validatePasscode(String passcode) {
         if (!isEmpty(passcode)) {
-            mForgotPasswordInteractor.validatePasscode(passcode, new FirebaseCallback<String>() {
+            mInteractor.validatePasscode(passcode, new FirebaseCallback<String>() {
                 @Override
                 public void success(String result) {
-                    mForgotPasswordView.validatePasscodeSuccess();
+                    mView.validatePasscodeSuccess();
 
                 }
 
                 @Override
-                public void fail(Exception exception) {
-                    mForgotPasswordView.validatePasscodeFail();
+                public void fail(String error) {
+                    if (mView.isActive()) {
+                        mView.onError(error);
+                    }
                 }
             });
         } else {
-            mForgotPasswordView.validatePasscodeFail();
+            mView.onError("Please enter a valid passcode");
         }
     }
 
-    private boolean isEmpty(String string) {
-        return string.equals("");
+    @Override
+    public void onDestroy() {
+        mInteractor.destroyAllListeners();
     }
 
     @Override
     public void sendResetEmail(String email) {
-        if (!isEmpty(email)) {
-            mForgotPasswordInteractor.sendResetEmail(email, new FirebaseCallback<Void>() {
+        if (!isValidEmail(email)) {
+            mInteractor.sendResetEmail(email, new FirebaseCallback<Void>() {
                 @Override
                 public void success(Void result) {
-                    mForgotPasswordView.sendEmailSuccess();
+                    mView.sendEmailSuccess();
                 }
 
                 @Override
-                public void fail(Exception exception) {
-                    mForgotPasswordView.sendEmailFail();
+                public void fail(String error) {
+                    if (mView.isActive()) {
+                        mView.onError(error);
+                    }
                 }
             });
         }

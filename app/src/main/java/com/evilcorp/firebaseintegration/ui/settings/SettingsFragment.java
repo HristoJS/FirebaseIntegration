@@ -1,4 +1,4 @@
-package com.evilcorp.firebaseintegration.settings;
+package com.evilcorp.firebaseintegration.ui.settings;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;

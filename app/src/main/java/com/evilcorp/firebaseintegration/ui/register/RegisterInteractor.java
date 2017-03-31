@@ -2,10 +2,11 @@ package com.evilcorp.firebaseintegration.ui.register;
 
 import android.net.Uri;
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 import com.evilcorp.firebaseintegration.data.firebase.FirebaseCallback;
 import com.evilcorp.firebaseintegration.data.firebase.FirebaseInteractor;
-import com.evilcorp.firebaseintegration.data.firebase.model.UserAccount;
+import com.evilcorp.firebaseintegration.data.firebase.model.user.UserAccount;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.AuthResult;
@@ -17,7 +18,7 @@ import com.google.firebase.storage.UploadTask;
 
 @SuppressWarnings("unchecked")
 class RegisterInteractor extends FirebaseInteractor implements RegisterContract.Interactor {
-
+    private static final String TAG = RegisterInteractor.class.getSimpleName();
     private UserAccount mUserAccount;
     private FirebaseUser mFirebaseUser;
     private FirebaseCallback<Void> mFirebaseCallback;
@@ -42,11 +43,6 @@ class RegisterInteractor extends FirebaseInteractor implements RegisterContract.
         }
     }
 
-    @Override
-    public void destroy() {
-
-    }
-
     private void verifyEmail() {
         mFirebaseUser.sendEmailVerification().addOnFailureListener(mFailureListener);
     }
@@ -63,20 +59,14 @@ class RegisterInteractor extends FirebaseInteractor implements RegisterContract.
 
     private void updateProfile(Uri photoUri) {
         assert photoUri != null;
+        mSuccessListener = new RegisterSuccessListener();
         mFirebaseUser.updateProfile(new UserProfileChangeRequest.Builder()
                 .setDisplayName(mUserAccount.getName())
                 .setPhotoUri(photoUri)
                 .build())
-                .addOnFailureListener(mFailureListener);
-        mUserAccount.setAvatar(photoUri.toString());
-        addUserToDatabase(mFirebaseUser);
-    }
-
-    private void addUserToDatabase(FirebaseUser firebaseUser) {
-        mSuccessListener = new RegisterSuccessListener();
-        mUsersTable.child(firebaseUser.getUid()).setValue(mUserAccount)
                 .addOnSuccessListener(mSuccessListener)
                 .addOnFailureListener(mFailureListener);
+        mUserAccount.setAvatar(photoUri.toString());
     }
 
     private final class CreateUserListener implements OnSuccessListener<AuthResult> {
@@ -109,8 +99,8 @@ class RegisterInteractor extends FirebaseInteractor implements RegisterContract.
     private final class FailureListener implements OnFailureListener {
         @Override
         public void onFailure(@NonNull Exception exception) {
-            exception.printStackTrace();
-            mFirebaseCallback.fail(exception);
+            mFirebaseCallback.fail("Unable to register");
+            Log.e(TAG, "Trying to register", exception);
         }
     }
 }

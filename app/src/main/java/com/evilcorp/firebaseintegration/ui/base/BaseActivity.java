@@ -3,7 +3,6 @@ package com.evilcorp.firebaseintegration.ui.base;
 
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
-import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
@@ -24,23 +23,26 @@ import com.evilcorp.firebaseintegration.ChatterinoApp;
 import com.evilcorp.firebaseintegration.R;
 import com.evilcorp.firebaseintegration.data.firebase.FirebaseConnection;
 import com.evilcorp.firebaseintegration.view.RounderCornerImage;
-import com.evilcorp.firebaseintegration.data.firebase.model.UserAccount;
+import com.evilcorp.firebaseintegration.data.firebase.model.user.UserAccount;
 import com.evilcorp.firebaseintegration.data.firebase.model.UserStatus;
 
-public abstract class BaseActivity extends AppCompatActivity {
+public abstract class BaseActivity extends AppCompatActivity implements BaseContract.View {
     private ProgressDialog mProgressDialog;
     private AlertDialog mAlertDialog;
+    private static boolean isActive = false;
 
     @Override
     protected void onPause() {
         super.onPause();
         FirebaseConnection.goOffline();
+        isActive = false;
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         FirebaseConnection.goOnline();
+        isActive = true;
     }
 
     private void dismissDialog(DialogInterface dialog) {
@@ -56,6 +58,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         dismissDialog(mAlertDialog);
         dismissDialog(mProgressDialog);
     }
+
     protected void showProgress(String msg) {
         if (mProgressDialog != null && mProgressDialog.isShowing())
             dismissProgress();
@@ -111,6 +114,10 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     protected void addUserPanel(){
         final UserAccount user = ChatterinoApp.getCurrentAccount();
+        if (user == null) {
+            finish();
+            return;
+        }
         Toolbar userToolbar = (Toolbar) findViewById(R.id.userToolbar);
         userToolbar.setTitle(user.getName());
         setSupportActionBar(userToolbar);
@@ -129,7 +136,7 @@ public abstract class BaseActivity extends AppCompatActivity {
 
         final ImageView userStatusIcon = (ImageView) findViewById(R.id.userStatusIcon);
         Spinner userStatusSpinner = (Spinner) findViewById(R.id.userStatusSpinner);
-        userStatusSpinner.setBackgroundColor(ContextCompat.getColor(this,R.color.colorPrimary));
+        //userStatusSpinner.setBackgroundColor(ContextCompat.getColor(this,R.color.colorPrimary));
         if(user.getAccountType() == AccountType.GUEST){
             userStatusSpinner.setVisibility(View.INVISIBLE);
             userStatusIcon.setVisibility(View.INVISIBLE);
@@ -145,25 +152,6 @@ public abstract class BaseActivity extends AppCompatActivity {
         userStatusSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
-//                int color = 0;
-//                switch(position){
-//                    case 0:
-//                        color = R.color.statusOfflineColor;
-//                        break;
-//                    case 1:
-//                        color = R.color.statusOnlineColor;
-//                        break;
-//                    case 2:
-//                        color = R.color.statusAwayColor;
-//                        break;
-//                    case 3:
-//                        color = R.color.statusBusyColor;
-//                        break;
-//                    case 4:
-//                        color = R.color.statusOfflineColor;
-//                        break;
-//                }
-
                 int[] colors = getResources().getIntArray(R.array.user_statuses_array);
                 userStatusIcon.setColorFilter(colors[position]);
                 user.setUserStatus(position);
@@ -184,5 +172,16 @@ public abstract class BaseActivity extends AppCompatActivity {
         if(backstackEnabled)
             transaction.addToBackStack(null);
         transaction.commit();
+    }
+
+
+    @Override
+    public void onError(String error) {
+        showAlert(error);
+    }
+
+    @Override
+    public boolean isActive() {
+        return isActive;
     }
 }

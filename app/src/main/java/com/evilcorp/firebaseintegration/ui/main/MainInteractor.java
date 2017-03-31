@@ -8,7 +8,7 @@ import com.evilcorp.firebaseintegration.ChatterinoApp;
 import com.evilcorp.firebaseintegration.data.firebase.FirebaseCallback;
 import com.evilcorp.firebaseintegration.data.firebase.FirebaseInteractor;
 import com.evilcorp.firebaseintegration.data.firebase.model.AccountType;
-import com.evilcorp.firebaseintegration.data.firebase.model.UserAccount;
+import com.evilcorp.firebaseintegration.data.firebase.model.user.UserAccount;
 import com.evilcorp.firebaseintegration.data.firebase.model.UserStatus;
 import com.facebook.login.LoginManager;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -26,7 +26,7 @@ public class MainInteractor extends FirebaseInteractor implements MainContract.I
 
     private final FirebaseUser mUser;
 
-    public MainInteractor() {
+    MainInteractor() {
         mUser = mFirebaseAuth.getCurrentUser();
         updateUserStatus(UserStatus.ONLINE);
     }
@@ -69,7 +69,10 @@ public class MainInteractor extends FirebaseInteractor implements MainContract.I
             public void onComplete(@NonNull Task<Uri> task) {
                 if (task.isSuccessful()) {
                     callback.success(task.getResult());
-                } else callback.fail(task.getException());
+                } else {
+                    callback.fail("Unable to download image");
+                    Log.e(TAG, "Trying to download image", task.getException());
+                }
             }
         });
     }
@@ -92,7 +95,8 @@ public class MainInteractor extends FirebaseInteractor implements MainContract.I
                     callback.success(message);
                     //mainView.setMessage(message);
                 } else {
-                    callback.fail(task.getException());
+                    callback.fail("Unable to retrieve message");
+                    Log.e(TAG, "Trying to retrieve a message from remote config", task.getException());
                 }
             }
         });
@@ -100,7 +104,7 @@ public class MainInteractor extends FirebaseInteractor implements MainContract.I
 
     private void updateUserStatus(int userStatus) {
         UserAccount user = ChatterinoApp.getCurrentAccount();
-        if (user.getAccountType() == AccountType.GUEST) {
+        if (user == null || user.getAccountType() == AccountType.GUEST) {
             return;
         }
         user.setUserStatus(userStatus);

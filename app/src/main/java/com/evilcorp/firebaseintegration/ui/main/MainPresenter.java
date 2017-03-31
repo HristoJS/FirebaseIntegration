@@ -1,18 +1,21 @@
 package com.evilcorp.firebaseintegration.ui.main;
 
 import android.net.Uri;
+import android.util.Log;
 
 import com.evilcorp.firebaseintegration.ChatterinoApp;
 import com.evilcorp.firebaseintegration.data.firebase.FirebaseCallback;
 import com.evilcorp.firebaseintegration.data.firebase.model.AccountType;
+import com.evilcorp.firebaseintegration.ui.base.BasePresenter;
 
 
-public class MainPresenter implements MainContract.Presenter {
+public class MainPresenter extends BasePresenter implements MainContract.Presenter {
     private static final String TAG = MainPresenter.class.getSimpleName();
     private final MainContract.View mainView;
     private final MainContract.Interactor mMainInteractor;
 
     public MainPresenter(MainContract.View view, MainContract.Interactor interactor) {
+        super(view, interactor);
         this.mainView = view;
         this.mMainInteractor = interactor;
     }
@@ -26,8 +29,10 @@ public class MainPresenter implements MainContract.Presenter {
             }
 
             @Override
-            public void fail(Exception exception) {
-                exception.printStackTrace();
+            public void fail(String error) {
+                if (mainView.isActive()) {
+                    mainView.onError(error);
+                }
             }
         });
     }
@@ -37,7 +42,7 @@ public class MainPresenter implements MainContract.Presenter {
         try {
             mMainInteractor.logout();
         } catch (Exception ex) {
-            ex.printStackTrace();
+            Log.e(TAG, "Trying to logout", ex);
             mainView.logoutFail();
         } finally {
             if (isGuest()) {
@@ -58,8 +63,10 @@ public class MainPresenter implements MainContract.Presenter {
             }
 
             @Override
-            public void fail(Exception exception) {
-                exception.printStackTrace();
+            public void fail(String error) {
+                if (mainView.isActive()) {
+                    mainView.onError(error);
+                }
             }
         });
     }

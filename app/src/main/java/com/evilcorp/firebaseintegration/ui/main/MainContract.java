@@ -3,10 +3,11 @@ package com.evilcorp.firebaseintegration.ui.main;
 import android.net.Uri;
 
 import com.evilcorp.firebaseintegration.data.firebase.FirebaseCallback;
+import com.evilcorp.firebaseintegration.ui.base.BaseContract;
 
 public interface MainContract {
 
-    interface View {
+    interface View extends BaseContract.View {
 
         void logoutSuccess();
 
@@ -18,7 +19,7 @@ public interface MainContract {
 
     }
 
-    interface Presenter {
+    interface Presenter extends BaseContract.Presenter {
 
         void logout();
 
@@ -30,7 +31,7 @@ public interface MainContract {
 
     }
 
-    interface Interactor {
+    interface Interactor extends BaseContract.Interactor {
 
         void downloadImage(final FirebaseCallback<Uri> callback);
 

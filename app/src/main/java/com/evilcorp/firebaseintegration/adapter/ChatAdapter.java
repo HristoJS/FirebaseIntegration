@@ -11,10 +11,12 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.evilcorp.firebaseintegration.R;
+import com.evilcorp.firebaseintegration.helper.Time;
+import com.evilcorp.firebaseintegration.helper.Util;
 import com.evilcorp.firebaseintegration.ui.chat.ChatContract;
 import com.evilcorp.firebaseintegration.view.RounderCornerImage;
 import com.evilcorp.firebaseintegration.data.firebase.model.Message;
-import com.evilcorp.firebaseintegration.data.firebase.model.UserAccount;
+import com.evilcorp.firebaseintegration.data.firebase.model.user.UserAccount;
 import com.google.firebase.database.Query;
 
 import java.text.SimpleDateFormat;
@@ -54,11 +56,12 @@ public class ChatAdapter extends FirebaseRecyclerAdapter<Message,ChatAdapter.Mes
 
     @Override
     protected void populateViewHolder(MessageViewHolder viewHolder, final Message message, int position) {
-        String date = new SimpleDateFormat("MM/dd/yyyy", Locale.getDefault()).format(new Date(message.getTimestamp()));
+        //String date = new SimpleDateFormat("MM/dd/yyyy", Locale.getDefault()).format(new Date(message.getTimestamp()));
+        String date = Time.timeAgo(message.getTimestamp());
         viewHolder.chatDate.setText(date);
         //String id = message.getUserId();
         viewHolder.chatMessage.setText(message.getMessage());
-        if(message.getUserId().equals(chatView.getUserId())){
+        if (Util.equals(message.getUserId(), chatView.getUserId())) {
             viewHolder.chatMessage.setBackgroundResource(R.drawable.ic_chat_bubble_black_24dp_right);
             alignView(viewHolder.chatAvatar,ALIGN_END);
             alignView(viewHolder.chatMessage,viewHolder.chatAvatar);
@@ -83,7 +86,7 @@ public class ChatAdapter extends FirebaseRecyclerAdapter<Message,ChatAdapter.Mes
 
     private UserAccount getUser(final String userId) {
         for(UserAccount userAccount : chatParticipants) {
-            if (userAccount.getId().equals(userId)) {
+            if (Util.equals(userAccount.getId(), userId)) {
                 return userAccount;
             }
         }

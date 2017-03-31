@@ -1,5 +1,7 @@
 package com.evilcorp.firebaseintegration.ui.login;
 
+import com.evilcorp.firebaseintegration.data.firebase.FirebaseCallback;
+import com.evilcorp.firebaseintegration.ui.base.BaseContract;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 
 /**
@@ -8,7 +10,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 
 public interface LoginContract {
 
-    interface View {
+    interface View extends BaseContract.View {
 
         void loginSuccess();
 
@@ -20,13 +22,9 @@ public interface LoginContract {
 
     }
 
-    interface Presenter {
+    interface Presenter extends BaseContract.Presenter {
 
         boolean autoLogin();
-
-        boolean isEmailValid(String email);
-
-        boolean isPasswordValid(String password);
 
         boolean loginWithEmail(String email, String password);
 
@@ -38,7 +36,23 @@ public interface LoginContract {
 
         LoginInteractor.FacebookLoginHandler getFacebookHandler();
 
-        void onDestroy();
+    }
+
+    interface Interactor extends BaseContract.Interactor {
+
+        void setCallback(FirebaseCallback<Void> callback);
+
+        void loginWithEmail(String email, String password);
+
+        void loginAsGuest();
+
+        void loginWithGoogle(GoogleSignInResult result);
+
+        boolean isUserLoggedIn();
+
+        com.evilcorp.firebaseintegration.ui.login.LoginInteractor.TwitterLoginHandler getTwitterLoginHandler();
+
+        com.evilcorp.firebaseintegration.ui.login.LoginInteractor.FacebookLoginHandler getFacebookLoginHandler();
 
     }
 }

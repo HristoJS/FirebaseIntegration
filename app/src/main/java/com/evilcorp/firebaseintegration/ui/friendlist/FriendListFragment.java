@@ -16,7 +16,7 @@ import com.evilcorp.firebaseintegration.R;
 import com.evilcorp.firebaseintegration.adapter.FriendListAdapter;
 import com.evilcorp.firebaseintegration.ui.base.BaseFragment;
 import com.evilcorp.firebaseintegration.ui.chat.ChatActivity;
-import com.evilcorp.firebaseintegration.data.firebase.model.UserAccount;
+import com.evilcorp.firebaseintegration.data.firebase.model.user.UserAccount;
 
 import java.util.List;
 
@@ -101,11 +101,5 @@ public class FriendListFragment extends BaseFragment implements FriendListContra
     public void onDestroy() {
         super.onDestroy();
         mPresenter.onDestroy();
-        mPresenter = null;
-    }
-
-    @Override
-    public void onError(String error) {
-        showAlert(error);
     }
 }

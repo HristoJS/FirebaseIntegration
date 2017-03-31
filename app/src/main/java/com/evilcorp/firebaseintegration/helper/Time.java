@@ -1,6 +1,7 @@
 package com.evilcorp.firebaseintegration.helper;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.instacart.library.truetime.TrueTime;
 
@@ -19,6 +20,7 @@ import java.util.concurrent.TimeUnit;
  */
 
 public class Time {
+    private static final String TAG = Time.class.getSimpleName();
 
     private static final List<Long> TIMES = Arrays.asList(
             TimeUnit.DAYS.toMillis(365),
@@ -39,11 +41,11 @@ public class Time {
                     TrueTime.build()
                             .withLoggingEnabled(true)
                             .withSharedPreferences(context)
-                            .withNtpHost("time.google.com")
+                            .withNtpHost("time.apple.com")
                             .withConnectionTimeout(DEFAULT_TIMEOUT)
                             .initialize();
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    Log.e(TAG, "Trying to build TrueTime", e);
                 }
             }
         }).start();
@@ -54,6 +56,7 @@ public class Time {
     }
 
     public static long getTime(){
+        Log.d(TAG, "TrueTime init: " + TrueTime.isInitialized() + TrueTime.now());
         return TrueTime.isInitialized() ? TrueTime.now().getTime() : new Date().getTime();
     }
 
@@ -85,6 +88,6 @@ public class Time {
                 break;
             }
         }
-        return sb.toString().isEmpty() ? "A moment ago" : sb.toString();
+        return sb.toString().isEmpty() ? "a moment ago" : sb.toString();
     }
 }

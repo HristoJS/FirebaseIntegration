@@ -1,5 +1,6 @@
-package com.evilcorp.firebaseintegration.data.firebase.model;
+package com.evilcorp.firebaseintegration.data.firebase.model.user;
 
+import com.evilcorp.firebaseintegration.data.firebase.model.AccountType;
 import com.evilcorp.firebaseintegration.helper.Time;
 
 /**

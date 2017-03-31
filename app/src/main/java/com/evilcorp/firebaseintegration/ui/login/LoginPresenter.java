@@ -2,18 +2,21 @@ package com.evilcorp.firebaseintegration.ui.login;
 
 import com.evilcorp.firebaseintegration.R;
 import com.evilcorp.firebaseintegration.data.firebase.FirebaseCallback;
+import com.evilcorp.firebaseintegration.ui.base.BaseContract;
+import com.evilcorp.firebaseintegration.ui.base.BasePresenter;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 
 
-public class LoginPresenter implements LoginContract.Presenter, FirebaseCallback<Void> {
+public class LoginPresenter extends BasePresenter implements LoginContract.Presenter, FirebaseCallback<Void> {
     private static final String TAG = LoginPresenter.class.getSimpleName();
 
     private final LoginContract.View mLoginView;
-    private LoginInteractor mLoginInteractor;
+    private LoginContract.Interactor mLoginInteractor;
 
-    public LoginPresenter(LoginContract.View view, LoginInteractor loginInteractor) {
+    public LoginPresenter(LoginContract.View view, LoginContract.Interactor interactor) {
+        super(view, interactor);
         this.mLoginView = view;
-        this.mLoginInteractor = loginInteractor;
+        this.mLoginInteractor = interactor;
         mLoginInteractor.setCallback(this);
     }
 
@@ -30,7 +33,7 @@ public class LoginPresenter implements LoginContract.Presenter, FirebaseCallback
     @Override
     public void onDestroy() {
         mLoginInteractor.setCallback(null);
-        mLoginInteractor.destroy();
+        mLoginInteractor.destroyAllListeners();
         mLoginInteractor = null;
     }
 
@@ -41,13 +44,13 @@ public class LoginPresenter implements LoginContract.Presenter, FirebaseCallback
         mLoginView.setPasswordError(0);
 
         // Check for a valid email address.
-        if (!isEmailValid(email)) {
+        if (!isValidEmail(email)) {
             mLoginView.setEmailError(R.string.error_invalid_email);
             return false;
         }
 
         // Check for a valid password, if the user entered one.
-        if (!isPasswordValid(password)) {
+        if (!isValidPassword(password)) {
             mLoginView.setPasswordError(R.string.error_incorrect_password);
             return false;
         }
@@ -77,22 +80,12 @@ public class LoginPresenter implements LoginContract.Presenter, FirebaseCallback
     }
 
     @Override
-    public boolean isEmailValid(String email) {
-        return email.contains("@");
-    }
-
-    @Override
-    public boolean isPasswordValid(String password) {
-        return password.length() > 5 && password.length() < 20;
-    }
-
-    @Override
     public void success(Void v) {
         mLoginView.loginSuccess();
     }
 
     @Override
-    public void fail(Exception exception) {
-        mLoginView.loginFail(exception.getMessage());
+    public void fail(String error) {
+        mLoginView.loginFail(error);
     }
 }

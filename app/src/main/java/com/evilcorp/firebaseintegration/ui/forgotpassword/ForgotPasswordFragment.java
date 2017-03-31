@@ -59,19 +59,15 @@ public class ForgotPasswordFragment extends BaseFragment implements View.OnClick
     }
 
     @Override
-    public void sendEmailFail() {
-        showAlert("Wrong mEmailEditText.");
-    }
-
-    @Override
     public void validatePasscodeSuccess() {
         showAlert("Password reset.");
         getActivity().onBackPressed();
     }
 
     @Override
-    public void validatePasscodeFail() {
-        showAlert("Wrong code.");
+    public void onDestroy() {
+        super.onDestroy();
+        mPresenter.onDestroy();
     }
 }
 
